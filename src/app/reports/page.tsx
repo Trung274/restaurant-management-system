@@ -77,11 +77,11 @@ export default function ReportsPage() {
             </p>
           </div>
           <div className="flex gap-3">
-            <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-indigo-500/30 transition-all duration-300 flex items-center gap-2">
+            <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-indigo-500/30 transition-all duration-300 flex items-center gap-2 cursor-pointer">
               <CalendarIcon className="w-5 h-5 text-gray-400 group-hover:text-indigo-400 transition-colors" />
               <span>Lịch báo cáo</span>
             </button>
-            <button className="group relative px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2">
+            <button className="group relative px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-indigo-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
               <DocumentChartBarIcon className="w-5 h-5" />
               <span>Tạo báo cáo mới</span>
             </button>

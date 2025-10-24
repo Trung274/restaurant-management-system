@@ -110,7 +110,7 @@ export default function StaffPage() {
         </div>
 
         {/* Add Staff Button */}
-        <button className="group relative px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2">
+        <button className="group relative px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
           <PlusIcon className="w-5 h-5" />
           <span>Thêm nhân viên</span>
         </button>
@@ -122,7 +122,7 @@ export default function StaffPage() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setSelectedStatus('all')}
-            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${
+            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${
               selectedStatus === 'all'
                 ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/30'
                 : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
@@ -136,7 +136,7 @@ export default function StaffPage() {
               <button
                 key={key}
                 onClick={() => setSelectedStatus(key)}
-                className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
+                className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
                   selectedStatus === key
                     ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                     : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
@@ -316,7 +316,7 @@ export default function StaffPage() {
                 Top nhân viên có hiệu suất làm việc tốt nhất tháng này
               </p>
             </div>
-            <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105">
+            <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
               Xem chi tiết
             </button>
           </div>

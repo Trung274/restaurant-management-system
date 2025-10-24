@@ -111,7 +111,7 @@ export default function KitchenPage() {
                 {/* Status Filters */}
                 <button
                     onClick={() => setSelectedStatus('all')}
-                    className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${selectedStatus === 'all'
+                    className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${selectedStatus === 'all'
                             ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg shadow-red-500/30'
                             : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
@@ -122,7 +122,7 @@ export default function KitchenPage() {
                     <button
                         key={key}
                         onClick={() => setSelectedStatus(key)}
-                        className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${selectedStatus === key
+                        className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedStatus === key
                                 ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                                 : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
                             }`}
@@ -135,12 +135,12 @@ export default function KitchenPage() {
                 <div className="flex-1"></div>
 
                 {/* Action Buttons */}
-                <button className="group relative px-6 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-red-500/30 transition-all duration-300 flex items-center gap-2">
+                <button className="group relative px-6 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-red-500/30 transition-all duration-300 flex items-center gap-2 cursor-pointer">
                     <FunnelIcon className="w-5 h-5 text-gray-400 group-hover:text-red-400 transition-colors" />
                     <span>Lọc</span>
                 </button>
 
-                <button className="group relative px-6 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-red-500/30 transition-all duration-300 flex items-center gap-2">
+                <button className="group relative px-6 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-red-500/30 transition-all duration-300 flex items-center gap-2 cursor-pointer">
                     <ArrowPathIcon className="w-5 h-5 text-gray-400 group-hover:text-red-400 transition-colors" />
                     <span>Làm mới</span>
                 </button>

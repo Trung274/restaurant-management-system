@@ -106,13 +106,13 @@ export default function OrdersPage() {
         </div>
 
         {/* Filter Button */}
-        <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-blue-500/30 transition-all duration-300 flex items-center gap-2">
+        <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-blue-500/30 transition-all duration-300 flex items-center gap-2 cursor-pointer">
           <FunnelIcon className="w-5 h-5 text-gray-400 group-hover:text-blue-400 transition-colors" />
           <span>Lọc</span>
         </button>
 
         {/* New Order Button */}
-        <button className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2">
+        <button className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
           <PlusIcon className="w-5 h-5" />
           <span>Tạo đơn mới</span>
         </button>
@@ -122,7 +122,7 @@ export default function OrdersPage() {
       <div className="flex flex-wrap gap-3 mb-8">
         <button
           onClick={() => setSelectedStatus('all')}
-          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${
+          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${
             selectedStatus === 'all'
               ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30'
               : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
@@ -134,7 +134,7 @@ export default function OrdersPage() {
           <button
             key={key}
             onClick={() => setSelectedStatus(key)}
-            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
+            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
               selectedStatus === key
                 ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                 : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`

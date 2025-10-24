@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import StatsCard from '@/components/ui/StatsCard';
-import { revenueData, dailyRevenue, topProducts, paymentMethods, revenueByTimeSlot } from './mockData';
+import { revenueData, dailyRevenue, topProducts, paymentMethods, revenueByTimeSlot, revenueStats } from './mockData';
 import { 
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
@@ -27,6 +27,35 @@ export default function RevenuePage() {
     { key: 'year', label: 'Năm nay', icon: '📊' }
   ];
 
+  // Tính toán stats động
+  const statsData = useMemo(() => {
+    return revenueStats.map(stat => {
+      let value: string | number = stat.value;
+      let subtitle = stat.subtitle;
+      
+      switch(stat.id) {
+        case 'revenue':
+          value = `${(currentData.revenue / 1000000).toFixed(1)}M`;
+          // Tạo subtitle với change percentage
+          const changeIcon = currentData.change > 0 ? '↗' : '↘';
+          const changeColor = currentData.change > 0 ? 'text-green-400' : 'text-red-400';
+          subtitle = `${changeIcon} ${Math.abs(currentData.change)}% so với trước`;
+          break;
+        case 'orders':
+          value = currentData.orders;
+          break;
+        case 'customers':
+          value = currentData.customers;
+          break;
+        case 'avgOrderValue':
+          value = `${(currentData.avgOrderValue / 1000).toFixed(0)}K`;
+          break;
+      }
+      
+      return { ...stat, value, subtitle };
+    });
+  }, [currentData]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
@@ -50,11 +79,11 @@ export default function RevenuePage() {
             </p>
           </div>
           <div className="flex gap-3">
-            <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-green-500/30 transition-all duration-300 flex items-center gap-2">
+            <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-green-500/30 transition-all duration-300 flex items-center gap-2 cursor-pointer">
               <ArrowPathIcon className="w-5 h-5 text-gray-400 group-hover:text-green-400 transition-colors" />
               <span>Làm mới</span>
             </button>
-            <button className="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2">
+            <button className="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
               <DocumentChartBarIcon className="w-5 h-5" />
               <span>Xuất báo cáo</span>
             </button>
@@ -68,7 +97,7 @@ export default function RevenuePage() {
           <button
             key={period.key}
             onClick={() => setSelectedPeriod(period.key as typeof selectedPeriod)}
-            className={`px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center gap-3 ${
+            className={`px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center gap-3 cursor-pointer ${
               selectedPeriod === period.key
                 ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30 scale-105'
                 : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white hover:scale-105'
@@ -87,92 +116,18 @@ export default function RevenuePage() {
         ))}
       </div>
 
-      {/* Main Stats */}
+      {/* Main Stats - Sử dụng StatsCard component */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {/* Total Revenue */}
-        <div className="group relative bg-gradient-to-br from-green-500/10 to-emerald-500/10 backdrop-blur-sm border border-green-500/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-          <div className="relative">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-green-500/20 rounded-xl">
-                <BanknotesIcon className="w-8 h-8 text-green-400" />
-              </div>
-              <div className={`flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                currentData.change > 0 ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
-              }`}>
-                {currentData.change > 0 ? (
-                  <ArrowTrendingUpIcon className="w-4 h-4" />
-                ) : (
-                  <ArrowTrendingDownIcon className="w-4 h-4" />
-                )}
-                {Math.abs(currentData.change)}%
-              </div>
-            </div>
-            <p className="text-gray-400 text-sm mb-2">Tổng doanh thu</p>
-            <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400 mb-1">
-              {(currentData.revenue / 1000000).toFixed(1)}M
-            </p>
-            <p className="text-xs text-gray-500">
-              {selectedPeriod === 'today' ? 'Hôm nay' :
-               selectedPeriod === 'week' ? 'Tuần này' :
-               selectedPeriod === 'month' ? 'Tháng này' : 'Năm nay'}
-            </p>
-          </div>
-        </div>
-
-        {/* Total Orders */}
-        <div className="group relative bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-          <div className="relative">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-blue-500/20 rounded-xl">
-                <ShoppingCartIcon className="w-8 h-8 text-blue-400" />
-              </div>
-              <div className="text-3xl">🛒</div>
-            </div>
-            <p className="text-gray-400 text-sm mb-2">Tổng đơn hàng</p>
-            <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-1">
-              {currentData.orders}
-            </p>
-            <p className="text-xs text-gray-500">Đơn đã hoàn thành</p>
-          </div>
-        </div>
-
-        {/* Total Customers */}
-        <div className="group relative bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-purple-500/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-          <div className="relative">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-purple-500/20 rounded-xl">
-                <UsersIcon className="w-8 h-8 text-purple-400" />
-              </div>
-              <div className="text-3xl">👥</div>
-            </div>
-            <p className="text-gray-400 text-sm mb-2">Tổng khách hàng</p>
-            <p className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-400 mb-1">
-              {currentData.customers}
-            </p>
-            <p className="text-xs text-gray-500">Khách đã phục vụ</p>
-          </div>
-        </div>
-
-        {/* Average Order Value */}
-        <div className="group relative bg-gradient-to-br from-orange-500/10 to-amber-500/10 backdrop-blur-sm border border-orange-500/20 rounded-2xl p-6 hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-          <div className="relative">
-            <div className="flex items-center justify-between mb-4">
-              <div className="p-3 bg-orange-500/20 rounded-xl">
-                <ChartBarIcon className="w-8 h-8 text-orange-400" />
-              </div>
-              <div className="text-3xl">💰</div>
-            </div>
-            <p className="text-gray-400 text-sm mb-2">Giá trị TB/đơn</p>
-            <p className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400 mb-1">
-              {(currentData.avgOrderValue / 1000).toFixed(0)}K
-            </p>
-            <p className="text-xs text-gray-500">Trung bình mỗi đơn</p>
-          </div>
-        </div>
+        {statsData.map((stat) => (
+          <StatsCard
+            key={stat.id}
+            label={stat.label}
+            value={stat.value}
+            icon={stat.icon}
+            colorScheme={stat.colorScheme}
+            subtitle={stat.subtitle}
+          />
+        ))}
       </div>
 
       {/* Charts Row */}

@@ -47,7 +47,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                 {/* Right Section - Notifications & Profile */}
                 <div className="flex items-center gap-3 md:gap-4">
                     {/* Notifications */}
-                    <button className="relative group">
+                    <button className="relative group cursor-pointer">
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl blur opacity-0 group-hover:opacity-30 transition-opacity"></div>
                         <div className="relative bg-white/5 border border-white/10 rounded-xl p-2.5 hover:bg-white/10 hover:border-blue-500/30 transition-all duration-300">
                             <BellIcon className="w-5 h-5 text-gray-400 group-hover:text-blue-400 transition-colors" />
@@ -62,7 +62,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                     <div className="hidden sm:block h-8 w-px bg-white/10"></div>
 
                     {/* User Profile */}
-                    <button className="group flex items-center gap-2 md:gap-3 hover:bg-white/5 rounded-xl pr-2 md:pr-4 transition-all duration-300">
+                    <button className="group flex items-center gap-2 md:gap-3 hover:bg-white/5 rounded-xl pr-2 md:pr-4 transition-all duration-300 cursor-pointer">
                         <div className="relative">
                             {/* Avatar glow effect */}
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur opacity-30 group-hover:opacity-50 transition-opacity"></div>

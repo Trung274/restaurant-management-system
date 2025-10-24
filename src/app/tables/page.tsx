@@ -113,7 +113,7 @@ export default function TablesPage() {
         </select>
 
         {/* Add Table Button */}
-        <button className="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2">
+        <button className="group relative px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
           <PlusIcon className="w-5 h-5" />
           <span>Thêm bàn mới</span>
         </button>
@@ -123,7 +123,7 @@ export default function TablesPage() {
       <div className="flex flex-wrap gap-3 mb-8">
         <button
           onClick={() => setSelectedStatus('all')}
-          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${
+          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${
             selectedStatus === 'all'
               ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30'
               : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
@@ -135,7 +135,7 @@ export default function TablesPage() {
           <button
             key={key}
             onClick={() => setSelectedStatus(key)}
-            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
+            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
               selectedStatus === key
                 ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                 : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
@@ -318,7 +318,7 @@ export default function TablesPage() {
           <p className="text-gray-300">
             Xem trực quan vị trí và trạng thái tất cả các bàn trong nhà hàng
           </p>
-          <button className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105">
+          <button className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
             <span>🗺️</span>
             <span>Xem sơ đồ mặt bằng</span>
           </button>

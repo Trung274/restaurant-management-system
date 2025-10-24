@@ -94,7 +94,7 @@ export default function CustomersPage() {
                 {/* Favorites Toggle */}
                 <button
                     onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
-                    className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${showFavoritesOnly
+                    className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${showFavoritesOnly
                             ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/30'
                             : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
@@ -104,7 +104,7 @@ export default function CustomersPage() {
                 </button>
 
                 {/* Add Customer Button */}
-                <button className="group relative px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2">
+                <button className="group relative px-6 py-3 bg-gradient-to-r from-pink-600 to-rose-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-pink-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
                     <PlusIcon className="w-5 h-5" />
                     <span>Thêm khách hàng</span>
                 </button>
@@ -114,7 +114,7 @@ export default function CustomersPage() {
             <div className="flex flex-wrap gap-3 mb-8">
                 <button
                     onClick={() => setSelectedMembership('all')}
-                    className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${selectedMembership === 'all'
+                    className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${selectedMembership === 'all'
                             ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/30'
                             : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
@@ -125,7 +125,7 @@ export default function CustomersPage() {
                     <button
                         key={key}
                         onClick={() => setSelectedMembership(key)}
-                        className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${selectedMembership === key
+                        className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedMembership === key
                                 ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                                 : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
                             }`}
@@ -427,7 +427,7 @@ export default function CustomersPage() {
                             </p>
                         </div>
                     </div>
-                    <button className="px-8 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105">
+                    <button className="px-8 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
                         Gửi lời chúc
                     </button>
                 </div>

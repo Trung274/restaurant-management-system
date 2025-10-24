@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { settingsSections } from './mockData';
-import { 
+import {
   Cog6ToothIcon,
   UserCircleIcon,
   BellIcon,
@@ -347,11 +347,10 @@ export default function SettingsPage() {
                 ].map((theme, index) => (
                   <div
                     key={index}
-                    className={`relative p-6 rounded-2xl cursor-pointer transition-all duration-300 border-2 ${
-                      theme.active 
-                        ? 'border-pink-500/50 bg-gradient-to-br from-pink-500/10 to-rose-500/10' 
+                    className={`relative p-6 rounded-2xl cursor-pointer transition-all duration-300 border-2 ${theme.active
+                        ? 'border-pink-500/50 bg-gradient-to-br from-pink-500/10 to-rose-500/10'
                         : 'border-white/10 bg-white/5 hover:border-white/20'
-                    }`}
+                      }`}
                   >
                     <div className={`w-full h-24 bg-gradient-to-br ${theme.preview} rounded-xl mb-4`}></div>
                     <p className="text-white font-medium">{theme.name}</p>
@@ -378,9 +377,8 @@ export default function SettingsPage() {
                 ].map((color, index) => (
                   <button
                     key={index}
-                    className={`w-16 h-16 bg-gradient-to-r ${color} rounded-xl hover:scale-110 transition-all ${
-                      index === 2 ? 'ring-2 ring-white/50 ring-offset-2 ring-offset-gray-900' : ''
-                    }`}
+                    className={`w-16 h-16 bg-gradient-to-r ${color} rounded-xl hover:scale-110 transition-all ${index === 2 ? 'ring-2 ring-white/50 ring-offset-2 ring-offset-gray-900' : ''
+                      }`}
                   />
                 ))}
               </div>
@@ -421,11 +419,10 @@ export default function SettingsPage() {
               ].map((method, index) => (
                 <div
                   key={index}
-                  className={`p-6 rounded-2xl border-2 transition-all ${
-                    method.enabled
+                  className={`p-6 rounded-2xl border-2 transition-all ${method.enabled
                       ? `bg-gradient-to-br ${method.color}/10 border-${method.color.split(' ')[1]}/20`
                       : 'bg-white/5 border-white/10'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -488,17 +485,16 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
                   { name: 'Tiếng Việt', code: 'vi', flag: '🇻🇳', active: true },
-                  { name: 'English', code: 'en', flag: '🇬🇧', active: false },
-                  { name: '中文', code: 'zh', flag: '🇨🇳', active: false },
+                  { name: 'English', code: 'en', flag: '🇺🇸', active: false },
+                  { name: 'Français', code: 'fr', flag: '🇫🇷', active: false },
                   { name: '日本語', code: 'ja', flag: '🇯🇵', active: false }
                 ].map((lang, index) => (
                   <div
                     key={index}
-                    className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${
-                      lang.active
+                    className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${lang.active
                         ? 'bg-gradient-to-br from-cyan-500/10 to-teal-500/10 border-cyan-500/30'
                         : 'bg-white/5 border-white/10 hover:border-white/20'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -583,11 +579,10 @@ export default function SettingsPage() {
               ].map((integration, index) => (
                 <div
                   key={index}
-                  className={`p-6 rounded-2xl border transition-all ${
-                    integration.connected
+                  className={`p-6 rounded-2xl border transition-all ${integration.connected
                       ? `bg-gradient-to-br from-white/5 to-white/0 border-white/20`
                       : 'bg-white/5 border-white/10'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center gap-3">
@@ -606,11 +601,10 @@ export default function SettingsPage() {
                     )}
                   </div>
                   <button
-                    className={`w-full py-2.5 rounded-lg font-medium transition-all ${
-                      integration.connected
+                    className={`w-full py-2.5 rounded-lg font-medium transition-all ${integration.connected
                         ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
                         : `bg-gradient-to-r ${integration.color} text-white hover:shadow-lg`
-                    }`}
+                      }`}
                   >
                     {integration.connected ? 'Cấu hình' : 'Kết nối'}
                   </button>
@@ -698,22 +692,19 @@ export default function SettingsPage() {
               <button
                 key={section.id}
                 onClick={() => setSelectedSection(section.id)}
-                className={`w-full group relative bg-gradient-to-br ${
-                  isActive ? section.bg : 'from-white/5 to-white/0'
-                } backdrop-blur-sm border ${
-                  isActive ? section.border : 'border-white/10'
-                } rounded-xl p-4 hover:scale-105 transition-all duration-300 text-left overflow-hidden`}
+                className={`w-full group relative bg-gradient-to-br cursor-pointer ${isActive ? section.bg : 'from-white/5 to-white/0'
+                  } backdrop-blur-sm border ${isActive ? section.border : 'border-white/10'
+                  } rounded-xl p-4 hover:scale-105 transition-all duration-300 text-left overflow-hidden`}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"></div>
-                
+
                 <div className="relative flex items-center gap-3">
                   <div className={`p-2 rounded-lg bg-gradient-to-r ${section.bg} border ${section.border}`}>
                     <span className="text-xl">{section.emoji}</span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className={`font-semibold truncate ${
-                      isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
-                    }`}>
+                    <p className={`font-semibold truncate ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'
+                      }`}>
                       {section.name}
                     </p>
                   </div>
@@ -730,7 +721,7 @@ export default function SettingsPage() {
         <div className="lg:col-span-3">
           <div className={`relative bg-gradient-to-br ${selectedConfig?.bg} backdrop-blur-xl border ${selectedConfig?.border} rounded-3xl p-8 overflow-hidden`}>
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
-            
+
             <div className="relative">
               {/* Section Header */}
               <div className="flex items-center justify-between mb-8">
@@ -757,13 +748,12 @@ export default function SettingsPage() {
                 <button
                   onClick={handleSave}
                   disabled={saveStatus === 'saving'}
-                  className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 ${
-                    saveStatus === 'saved'
+                  className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 ${saveStatus === 'saved'
                       ? 'bg-green-600 text-white'
                       : saveStatus === 'saving'
-                      ? 'bg-white/10 text-gray-400 cursor-not-allowed'
-                      : `bg-gradient-to-r ${selectedConfig?.gradient} text-white hover:shadow-lg hover:scale-105`
-                  }`}
+                        ? 'bg-white/10 text-gray-400 cursor-not-allowed'
+                        : `bg-gradient-to-r ${selectedConfig?.gradient} text-white hover:shadow-lg hover:scale-105`
+                    }`}
                 >
                   {saveStatus === 'saved' ? (
                     <>

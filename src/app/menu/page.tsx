@@ -75,7 +75,7 @@ export default function MenuPage() {
         </p>
       </div>
 
-      {/* Stats Overview - Sử dụng StatsCard component */}
+      {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {statsData.map((stat) => (
           <StatsCard
@@ -109,7 +109,7 @@ export default function MenuPage() {
         </div>
 
         {/* Add Menu Button */}
-        <button className="group relative px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2">
+        <button className="group relative px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
           <PlusIcon className="w-5 h-5" />
           <span>Thêm món mới</span>
         </button>
@@ -123,7 +123,7 @@ export default function MenuPage() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
+              className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
                 selectedCategory === category
                   ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                   : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white hover:scale-105'
@@ -285,7 +285,7 @@ export default function MenuPage() {
                 Top các món ăn được khách hàng yêu thích nhất
               </p>
             </div>
-            <button className="px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105">
+            <button className="px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
               Xem báo cáo
             </button>
           </div>
