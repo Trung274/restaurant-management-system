@@ -1,7 +1,8 @@
 'use client';
 
 import StatsCard from '@/components/ui/StatsCard';
-import { dashboardStats } from './mockData';
+import QuickActionCard from './components/QuickActionCard';
+import { dashboardStats, quickActions } from './mockData';
 
 export default function DashboardPage() {
   return (
@@ -82,38 +83,17 @@ export default function DashboardPage() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="relative bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden group cursor-pointer hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="relative flex items-center justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">Thực đơn</h3>
-              <p className="text-gray-400">Quản lý món ăn & giá</p>
-            </div>
-            <div className="text-5xl">🍽️</div>
-          </div>
-        </div>
-
-        <div className="relative bg-gradient-to-br from-green-600/20 to-emerald-600/20 backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden group cursor-pointer hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="relative flex items-center justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">Nhân viên</h3>
-              <p className="text-gray-400">Quản lý ca làm việc</p>
-            </div>
-            <div className="text-5xl">👥</div>
-          </div>
-        </div>
-
-        <div className="relative bg-gradient-to-br from-orange-600/20 to-red-600/20 backdrop-blur-sm border border-white/10 rounded-2xl p-6 overflow-hidden group cursor-pointer hover:scale-105 transition-all duration-300">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="relative flex items-center justify-between">
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2">Báo cáo</h3>
-              <p className="text-gray-400">Xem phân tích chi tiết</p>
-            </div>
-            <div className="text-5xl">📈</div>
-          </div>
-        </div>
+        {quickActions.map((action) => (
+          <QuickActionCard
+            key={action.id}
+            title={action.title}
+            description={action.description}
+            emoji={action.emoji}
+            gradientFrom={action.gradientFrom}
+            gradientTo={action.gradientTo}
+            onClick={() => console.log(`Clicked: ${action.title}`)}
+          />
+        ))}
       </div>
     </div>
   );

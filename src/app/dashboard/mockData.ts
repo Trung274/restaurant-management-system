@@ -32,3 +32,30 @@ export const dashboardStats = [
     subtitle: '⏱️ Avg 12m thời gian chờ'
   }
 ];
+
+export const quickActions = [
+  {
+    id: 1,
+    title: 'Thực đơn',
+    description: 'Quản lý món ăn & giá',
+    emoji: '🍽️',
+    gradientFrom: 'from-blue-600/20',
+    gradientTo: 'to-purple-600/20',
+  },
+  {
+    id: 2,
+    title: 'Nhân viên',
+    description: 'Quản lý ca làm việc',
+    emoji: '👥',
+    gradientFrom: 'from-green-600/20',
+    gradientTo: 'to-emerald-600/20',
+  },
+  {
+    id: 3,
+    title: 'Báo cáo',
+    description: 'Xem phân tích chi tiết',
+    emoji: '📈',
+    gradientFrom: 'from-orange-600/20',
+    gradientTo: 'to-red-600/20',
+  },
+];

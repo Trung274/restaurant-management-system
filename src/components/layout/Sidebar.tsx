@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
 import {
     HomeIcon,
     Cog6ToothIcon,
@@ -25,7 +24,9 @@ const menuItems = [
                 href: '/dashboard',
                 icon: HomeIcon,
                 label: 'Dashboard',
-                gradient: 'from-blue-500 to-cyan-500',
+                gradient: 'from-blue-600 to-cyan-400',
+                hoverBg: 'hover:bg-blue-500/10',
+                hoverBorder: 'hover:border-blue-500/30',
             },
         ]
     },
@@ -36,19 +37,25 @@ const menuItems = [
                 href: '/orders',
                 icon: ClipboardDocumentListIcon,
                 label: 'Đơn hàng',
-                gradient: 'from-purple-500 to-pink-500',
+                gradient: 'from-purple-600 to-fuchsia-500',
+                hoverBg: 'hover:bg-purple-500/10',
+                hoverBorder: 'hover:border-purple-500/30',
             },
             {
                 href: '/tables',
                 icon: TableCellsIcon,
                 label: 'Quản lý bàn',
-                gradient: 'from-green-500 to-emerald-500',
+                gradient: 'from-emerald-600 to-teal-400',
+                hoverBg: 'hover:bg-emerald-500/10',
+                hoverBorder: 'hover:border-emerald-500/30',
             },
             {
                 href: '/kitchen',
                 icon: BellAlertIcon,
                 label: 'Bếp',
-                gradient: 'from-red-500 to-orange-500',
+                gradient: 'from-red-600 to-orange-500',
+                hoverBg: 'hover:bg-red-500/10',
+                hoverBorder: 'hover:border-red-500/30',
             },
         ]
     },
@@ -59,19 +66,25 @@ const menuItems = [
                 href: '/menu',
                 icon: CubeIcon,
                 label: 'Thực đơn',
-                gradient: 'from-orange-500 to-yellow-500',
+                gradient: 'from-amber-600 to-yellow-400',
+                hoverBg: 'hover:bg-amber-500/10',
+                hoverBorder: 'hover:border-amber-500/30',
             },
             {
                 href: '/staff',
                 icon: UsersIcon,
                 label: 'Nhân viên',
-                gradient: 'from-indigo-500 to-purple-500',
+                gradient: 'from-sky-600 to-blue-400',
+                hoverBg: 'hover:bg-sky-500/10',
+                hoverBorder: 'hover:border-sky-500/30',
             },
             {
                 href: '/customers',
                 icon: UserGroupIcon,
                 label: 'Khách hàng',
-                gradient: 'from-pink-500 to-rose-500',
+                gradient: 'from-pink-600 to-rose-400',
+                hoverBg: 'hover:bg-pink-500/10',
+                hoverBorder: 'hover:border-pink-500/30',
             },
         ]
     },
@@ -82,13 +95,17 @@ const menuItems = [
                 href: '/revenue',
                 icon: BanknotesIcon,
                 label: 'Doanh thu',
-                gradient: 'from-teal-500 to-emerald-500',
+                gradient: 'from-green-600 to-emerald-400',
+                hoverBg: 'hover:bg-green-500/10',
+                hoverBorder: 'hover:border-green-500/30',
             },
             {
                 href: '/reports',
                 icon: ChartBarIcon,
                 label: 'Báo cáo',
-                gradient: 'from-violet-500 to-purple-500',
+                gradient: 'from-indigo-600 to-violet-400',
+                hoverBg: 'hover:bg-indigo-500/10',
+                hoverBorder: 'hover:border-indigo-500/30',
             },
         ]
     },
@@ -99,7 +116,9 @@ const menuItems = [
                 href: '/settings',
                 icon: Cog6ToothIcon,
                 label: 'Cài đặt',
-                gradient: 'from-gray-500 to-slate-500',
+                gradient: 'from-slate-600 to-gray-400',
+                hoverBg: 'hover:bg-slate-500/10',
+                hoverBorder: 'hover:border-slate-500/30',
             },
         ]
     },
@@ -189,40 +208,44 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                                             href={item.href}
                                             onClick={onClose}
                                             className={`
-                      group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300
-                      ${isActive
-                                                    ? 'bg-gradient-to-r from-white/10 to-white/5 border border-white/20'
-                                                    : 'hover:bg-white/5 border border-transparent hover:border-white/10'
+                                                group relative flex items-center gap-3 px-4 py-3 rounded-xl 
+                                                transition-all duration-300 border
+                                                ${isActive
+                                                    ? `bg-gradient-to-r from-white/10 to-white/5 border-white/20`
+                                                    : `border-transparent ${item.hoverBg} ${item.hoverBorder}`
                                                 }
-                    `}
+                                            `}
                                         >
                                             {/* Active indicator */}
                                             {isActive && (
                                                 <div className={`absolute left-0 w-1 h-8 bg-gradient-to-b ${item.gradient} rounded-r-full`}></div>
                                             )}
 
-                                            {/* Icon with gradient on active */}
-                                            <div className={`
-                      relative z-10 transition-transform duration-300 group-hover:scale-110
-                      ${isActive ? `text-transparent bg-clip-text bg-gradient-to-r ${item.gradient}` : 'text-gray-400'}
-                    `}>
-                                                <Icon className={`w-5 h-5 ${isActive ? 'text-blue-400' : ''}`} />
+                                            {/* Icon with gradient on active/hover */}
+                                            <div className="relative z-10 transition-transform duration-300 group-hover:scale-110">
+                                                <Icon 
+                                                    className={`w-5 h-5 transition-colors ${
+                                                        isActive 
+                                                            ? 'text-blue-400' 
+                                                            : 'text-gray-400 group-hover:text-white'
+                                                    }`} 
+                                                />
                                             </div>
 
                                             {/* Label */}
                                             <span className={`
-                      relative z-10 font-medium transition-colors
-                      ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'}
-                    `}>
+                                                relative z-10 font-medium transition-colors
+                                                ${isActive ? 'text-white' : 'text-gray-400 group-hover:text-white'}
+                                            `}>
                                                 {item.label}
                                             </span>
 
                                             {/* Hover glow effect */}
                                             {!isActive && (
                                                 <div className={`
-                        absolute inset-0 bg-gradient-to-r ${item.gradient} rounded-xl opacity-0 
-                        group-hover:opacity-10 transition-opacity blur
-                      `}></div>
+                                                    absolute inset-0 bg-gradient-to-r ${item.gradient} rounded-xl 
+                                                    opacity-0 group-hover:opacity-5 transition-opacity duration-300
+                                                `}></div>
                                             )}
                                         </Link>
                                     );
