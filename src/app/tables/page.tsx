@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
 import StatsCard from '@/components/ui/StatsCard';
 import { tables, tableStats, statusConfig } from './mockData';
 import { 
@@ -11,6 +12,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function TablesPage() {
+  const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedFloor, setSelectedFloor] = useState('all');
 
@@ -318,7 +320,9 @@ export default function TablesPage() {
           <p className="text-gray-300">
             Xem trực quan vị trí và trạng thái tất cả các bàn trong nhà hàng
           </p>
-          <button className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
+          <button 
+          onClick={() => router.push('/tables/floor-plan')}
+          className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
             <span>🗺️</span>
             <span>Xem sơ đồ mặt bằng</span>
           </button>
