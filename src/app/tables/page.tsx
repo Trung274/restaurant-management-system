@@ -4,17 +4,20 @@ import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import StatsCard from '@/components/ui/StatsCard';
 import { tables, tableStats, statusConfig } from './mockData';
-import { 
+import {
   MagnifyingGlassIcon,
   PlusIcon,
   UserGroupIcon,
   ClockIcon
 } from '@heroicons/react/24/outline';
+import PageHeader from '@/components/ui/PageHeader';
+import SearchBar from '@/components/ui/SearchBar';
 
 export default function TablesPage() {
   const router = useRouter();
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedFloor, setSelectedFloor] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Calculate dynamic stats
   const calculatedStats = useMemo(() => {
@@ -26,7 +29,7 @@ export default function TablesPage() {
 
     return tableStats.map(stat => {
       let value = stat.value;
-      switch(stat.id) {
+      switch (stat.id) {
         case 'total':
           value = totalTables;
           break;
@@ -56,23 +59,13 @@ export default function TablesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
-      <div className="mb-12">
-        <div className="inline-block mb-4">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm font-medium">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            Table Management
-          </span>
-        </div>
-        <h1 className="text-5xl font-bold text-white mb-4">
-          Quản lý bàn ăn
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 mt-2">
-            Tables Management
-          </span>
-        </h1>
-        <p className="text-gray-400 text-lg">
-          Theo dõi trạng thái và phân bổ bàn ăn trong nhà hàng
-        </p>
-      </div>
+      <PageHeader
+        theme="green"
+        badgeText="Tables management"
+        titleVietnamese="Quản lý bàn ăn"
+        titleEnglish="Tables Management"
+        description="Theo dõi trạng thái và phân bổ bàn ăn trong nhà hàng"
+      />
 
       {/* Stats Overview - REFACTORED */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
@@ -89,22 +82,15 @@ export default function TablesPage() {
       {/* Filters & Actions */}
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         {/* Search */}
-        <div className="flex-1">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div className="relative flex items-center">
-              <MagnifyingGlassIcon className="absolute left-4 w-5 h-5 text-gray-400 group-hover:text-green-400 transition-colors" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm bàn theo số, tầng, khu vực..."
-                className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-green-500/50 focus:bg-white/10 transition-all"
-              />
-            </div>
-          </div>
-        </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Tìm kiếm bàn theo số, tầng, khu vực..."
+          theme="green"
+        />
 
         {/* Floor Filter */}
-        <select 
+        <select
           value={selectedFloor}
           onChange={(e) => setSelectedFloor(e.target.value)}
           className="px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-green-500/30 transition-all duration-300 focus:outline-none focus:border-green-500/50 cursor-pointer"
@@ -125,11 +111,10 @@ export default function TablesPage() {
       <div className="flex flex-wrap gap-3 mb-8">
         <button
           onClick={() => setSelectedStatus('all')}
-          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${
-            selectedStatus === 'all'
+          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${selectedStatus === 'all'
               ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30'
               : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
-          }`}
+            }`}
         >
           Tất cả bàn
         </button>
@@ -137,11 +122,10 @@ export default function TablesPage() {
           <button
             key={key}
             onClick={() => setSelectedStatus(key)}
-            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
-              selectedStatus === key
+            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedStatus === key
                 ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                 : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
-            }`}
+              }`}
           >
             <config.icon className="w-4 h-4" />
             <span>{config.label}</span>
@@ -297,7 +281,7 @@ export default function TablesPage() {
           <p className="text-gray-400 mb-6">
             Không có bàn nào phù hợp với bộ lọc hiện tại
           </p>
-          <button 
+          <button
             onClick={() => {
               setSelectedStatus('all');
               setSelectedFloor('all');
@@ -312,7 +296,7 @@ export default function TablesPage() {
       {/* Floor Plan View Toggle */}
       <div className="mt-10 relative bg-gradient-to-br from-blue-600/20 to-purple-600/20 backdrop-blur-xl border border-white/10 rounded-3xl p-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5"></div>
-        
+
         <div className="relative text-center space-y-4">
           <h2 className="text-2xl font-bold text-white">
             Chế độ xem sơ đồ mặt bằng
@@ -320,9 +304,9 @@ export default function TablesPage() {
           <p className="text-gray-300">
             Xem trực quan vị trí và trạng thái tất cả các bàn trong nhà hàng
           </p>
-          <button 
-          onClick={() => router.push('/tables/floor-plan')}
-          className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
+          <button
+            onClick={() => router.push('/tables/floor-plan')}
+            className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 cursor-pointer">
             <span>🗺️</span>
             <span>Xem sơ đồ mặt bằng</span>
           </button>

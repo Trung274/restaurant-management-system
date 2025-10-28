@@ -11,6 +11,7 @@ import {
     FunnelIcon,
     ArrowPathIcon
 } from '@heroicons/react/24/outline';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function KitchenPage() {
     const [selectedStatus, setSelectedStatus] = useState('all');
@@ -28,8 +29,8 @@ export default function KitchenPage() {
     const statsData = useMemo(() => {
         return kitchenStats.map(stat => {
             let value = stat.value;
-            
-            switch(stat.id) {
+
+            switch (stat.id) {
                 case 'total':
                     value = kitchenOrders.length;
                     break;
@@ -43,7 +44,7 @@ export default function KitchenPage() {
                     value = readyCount;
                     break;
             }
-            
+
             return { ...stat, value };
         });
     }, [pendingCount, cookingCount, readyCount]);
@@ -51,23 +52,13 @@ export default function KitchenPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
             {/* Header */}
-            <div className="mb-12">
-                <div className="inline-block mb-4">
-                    <span className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/20 rounded-full text-red-400 text-sm font-medium">
-                        <span className="w-2 h-2 bg-red-400 rounded-full animate-pulse"></span>
-                        Kitchen Display System
-                    </span>
-                </div>
-                <h1 className="text-5xl font-bold text-white mb-4">
-                    Màn hình bếp
-                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-red-400 to-orange-500 mt-2">
-                        Kitchen Display
-                    </span>
-                </h1>
-                <p className="text-gray-400 text-lg">
-                    Theo dõi và xử lý đơn hàng từ bếp
-                </p>
-            </div>
+            <PageHeader
+                theme="red"
+                badgeText="Kitchen Display System"
+                titleVietnamese="Màn hình bếp"
+                titleEnglish="Kitchen Display"
+                description="Theo dõi và xử lý đơn hàng từ bếp"
+            />
 
             {/* Stats Overview - Sử dụng StatsCard component */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -112,8 +103,8 @@ export default function KitchenPage() {
                 <button
                     onClick={() => setSelectedStatus('all')}
                     className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${selectedStatus === 'all'
-                            ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg shadow-red-500/30'
-                            : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+                        ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white shadow-lg shadow-red-500/30'
+                        : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
                 >
                     Tất cả
@@ -123,8 +114,8 @@ export default function KitchenPage() {
                         key={key}
                         onClick={() => setSelectedStatus(key)}
                         className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedStatus === key
-                                ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
-                                : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
+                            ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
+                            : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
                             }`}
                     >
                         <config.icon className="w-4 h-4" />

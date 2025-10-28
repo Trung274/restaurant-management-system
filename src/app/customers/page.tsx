@@ -18,6 +18,8 @@ import {
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid, StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { customers, membershipConfig, customerStats } from './mockData';
+import PageHeader from '@/components/ui/PageHeader';
+import SearchBar from '@/components/ui/SearchBar';
 
 export default function CustomersPage() {
     const [selectedMembership, setSelectedMembership] = useState('all');
@@ -41,23 +43,13 @@ export default function CustomersPage() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
             {/* Header */}
-            <div className="mb-12">
-                <div className="inline-block mb-4">
-                    <span className="inline-flex items-center gap-2 px-4 py-2 bg-pink-500/10 border border-pink-500/20 rounded-full text-pink-400 text-sm font-medium">
-                        <span className="w-2 h-2 bg-pink-400 rounded-full animate-pulse"></span>
-                        Customer Management
-                    </span>
-                </div>
-                <h1 className="text-5xl font-bold text-white mb-4">
-                    Quản lý khách hàng
-                    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-500 mt-2">
-                        Customer Management
-                    </span>
-                </h1>
-                <p className="text-gray-400 text-lg">
-                    Quản lý thông tin khách hàng và chương trình khách hàng thân thiết
-                </p>
-            </div>
+            <PageHeader
+                theme="pink"
+                badgeText="Customer Management"
+                titleVietnamese="Quản lý khách hàng"
+                titleEnglish="Customer Management"
+                description="Quản lý thông tin khách hàng và chương trình khách hàng thân thiết"
+            />
 
             {/* Stats Overview */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -75,28 +67,19 @@ export default function CustomersPage() {
             {/* Search & Actions */}
             <div className="flex flex-col md:flex-row gap-4 mb-8">
                 {/* Search */}
-                <div className="flex-1">
-                    <div className="relative group">
-                        <div className="absolute inset-0 bg-gradient-to-r from-pink-500/20 to-rose-500/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <div className="relative flex items-center">
-                            <MagnifyingGlassIcon className="absolute left-4 w-5 h-5 text-gray-400 group-hover:text-pink-400 transition-colors" />
-                            <input
-                                type="text"
-                                placeholder="Tìm kiếm khách hàng theo tên, email, số điện thoại..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-pink-500/50 focus:bg-white/10 transition-all"
-                            />
-                        </div>
-                    </div>
-                </div>
+                <SearchBar
+                    value={searchQuery}
+                    onChange={setSearchQuery}
+                    placeholder="Tìm kiếm khách hàng theo tên, email, số điện thoại..."
+                    theme="pink"
+                />
 
                 {/* Favorites Toggle */}
                 <button
                     onClick={() => setShowFavoritesOnly(!showFavoritesOnly)}
                     className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${showFavoritesOnly
-                            ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/30'
-                            : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+                        ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/30'
+                        : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
                 >
                     {showFavoritesOnly ? <HeartIconSolid className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
@@ -115,8 +98,8 @@ export default function CustomersPage() {
                 <button
                     onClick={() => setSelectedMembership('all')}
                     className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${selectedMembership === 'all'
-                            ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/30'
-                            : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+                        ? 'bg-gradient-to-r from-pink-600 to-rose-600 text-white shadow-lg shadow-pink-500/30'
+                        : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
                         }`}
                 >
                     Tất cả hạng
@@ -126,8 +109,8 @@ export default function CustomersPage() {
                         key={key}
                         onClick={() => setSelectedMembership(key)}
                         className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedMembership === key
-                                ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
-                                : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
+                            ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
+                            : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
                             }`}
                     >
                         <span className="text-lg">{config.icon}</span>
@@ -166,8 +149,8 @@ export default function CustomersPage() {
                                     </div>
 
                                     <button className={`p-2 rounded-lg transition-all ${customer.favorite
-                                            ? 'bg-pink-500/20 text-pink-400'
-                                            : 'bg-white/5 text-gray-400 hover:text-pink-400'
+                                        ? 'bg-pink-500/20 text-pink-400'
+                                        : 'bg-white/5 text-gray-400 hover:text-pink-400'
                                         }`}>
                                         {customer.favorite ? <HeartIconSolid className="w-5 h-5" /> : <HeartIcon className="w-5 h-5" />}
                                     </button>
@@ -361,9 +344,9 @@ export default function CustomersPage() {
                                             <div className="flex items-center gap-4">
                                                 <div className="relative">
                                                     <div className={`absolute -top-2 -left-2 w-7 h-7 bg-gradient-to-r ${index === 0 ? 'from-yellow-500 to-amber-500' :
-                                                            index === 1 ? 'from-gray-400 to-gray-500' :
-                                                                index === 2 ? 'from-orange-500 to-amber-600' :
-                                                                    'from-blue-500 to-cyan-500'
+                                                        index === 1 ? 'from-gray-400 to-gray-500' :
+                                                            index === 2 ? 'from-orange-500 to-amber-600' :
+                                                                'from-blue-500 to-cyan-500'
                                                         } rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg`}>
                                                         {index + 1}
                                                     </div>

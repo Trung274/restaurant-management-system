@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { reportTypes, recentReports, scheduledReports, reportsStats } from './mockData';
 import StatsCard from '@/components/ui/StatsCard';
-import { 
+import {
   DocumentChartBarIcon,
   CalendarIcon,
   ArrowDownTrayIcon,
@@ -17,12 +17,13 @@ import {
   ArrowTrendingUpIcon,
   PrinterIcon
 } from '@heroicons/react/24/outline';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function ReportsPage() {
   const [selectedType, setSelectedType] = useState('all');
 
-  const filteredReports = selectedType === 'all' 
-    ? recentReports 
+  const filteredReports = selectedType === 'all'
+    ? recentReports
     : recentReports.filter(report => report.type === selectedType);
 
   const totalReports = recentReports.length;
@@ -34,8 +35,8 @@ export default function ReportsPage() {
   const statsData = useMemo(() => {
     return reportsStats.map(stat => {
       let value = stat.value;
-      
-      switch(stat.id) {
+
+      switch (stat.id) {
         case 'total':
           value = totalReports;
           break;
@@ -49,7 +50,7 @@ export default function ReportsPage() {
           value = totalDownloads;
           break;
       }
-      
+
       return { ...stat, value };
     });
   }, [totalReports, completedReports, processingReports, totalDownloads]);
@@ -57,26 +58,14 @@ export default function ReportsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
-      <div className="mb-12">
-        <div className="inline-block mb-4">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-500/10 border border-indigo-500/20 rounded-full text-indigo-400 text-sm font-medium">
-            <span className="w-2 h-2 bg-indigo-400 rounded-full animate-pulse"></span>
-            Reports Center
-          </span>
-        </div>
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-5xl font-bold text-white mb-4">
-              Trung tâm báo cáo
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-500 mt-2">
-                Reports Center
-              </span>
-            </h1>
-            <p className="text-gray-400 text-lg">
-              Tạo, quản lý và xuất báo cáo cho nhà hàng
-            </p>
-          </div>
-          <div className="flex gap-3">
+      <PageHeader
+        theme="indigo"
+        badgeText="Reports Center"
+        titleVietnamese="Trung tâm báo cáo"
+        titleEnglish="Reports Center"
+        description="Tạo, quản lý và xuất báo cáo cho nhà hàng"
+        actions={
+          <>
             <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-indigo-500/30 transition-all duration-300 flex items-center gap-2 cursor-pointer">
               <CalendarIcon className="w-5 h-5 text-gray-400 group-hover:text-indigo-400 transition-colors" />
               <span>Lịch báo cáo</span>
@@ -85,9 +74,9 @@ export default function ReportsPage() {
               <DocumentChartBarIcon className="w-5 h-5" />
               <span>Tạo báo cáo mới</span>
             </button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Quick Stats - Sử dụng StatsCard component */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -115,7 +104,7 @@ export default function ReportsPage() {
                 className={`group relative bg-gradient-to-br ${type.bg} backdrop-blur-sm border ${type.border} rounded-2xl p-6 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden`}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-                
+
                 <div className="relative">
                   <div className="flex items-start justify-between mb-4">
                     <div className={`p-4 rounded-xl bg-gradient-to-r ${type.bg} border ${type.border}`}>
@@ -160,11 +149,10 @@ export default function ReportsPage() {
         <div className="flex flex-wrap gap-3 mb-6">
           <button
             onClick={() => setSelectedType('all')}
-            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${
-              selectedType === 'all'
+            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${selectedType === 'all'
                 ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30'
                 : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
-            }`}
+              }`}
           >
             Tất cả
           </button>
@@ -172,11 +160,10 @@ export default function ReportsPage() {
             <button
               key={type.id}
               onClick={() => setSelectedType(type.id)}
-              className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${
-                selectedType === type.id
+              className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${selectedType === type.id
                   ? `bg-gradient-to-r ${type.gradient} text-white shadow-lg`
                   : `bg-gradient-to-r ${type.bg} border ${type.border} text-gray-400 hover:scale-105`
-              }`}
+                }`}
             >
               <span>{type.emoji}</span>
               <span>{type.name.replace('Báo cáo ', '')}</span>
@@ -264,7 +251,7 @@ export default function ReportsPage() {
         {/* Scheduled Reports */}
         <div className="relative bg-gradient-to-br from-blue-600/20 to-cyan-600/20 backdrop-blur-xl border border-blue-500/30 rounded-3xl p-8 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
-          
+
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
@@ -286,11 +273,10 @@ export default function ReportsPage() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="text-white font-semibold">{schedule.name}</h4>
-                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      schedule.active 
-                        ? 'bg-green-500/20 text-green-400' 
+                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${schedule.active
+                        ? 'bg-green-500/20 text-green-400'
                         : 'bg-gray-500/20 text-gray-400'
-                    }`}>
+                      }`}>
                       {schedule.active ? '✓ Hoạt động' : '⸺ Tạm dừng'}
                     </div>
                   </div>
@@ -316,7 +302,7 @@ export default function ReportsPage() {
         {/* Report Analytics */}
         <div className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-8 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5"></div>
-          
+
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">

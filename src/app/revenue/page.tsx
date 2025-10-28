@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import StatsCard from '@/components/ui/StatsCard';
 import { revenueData, dailyRevenue, topProducts, paymentMethods, revenueByTimeSlot, revenueStats } from './mockData';
-import { 
+import {
   ArrowTrendingUpIcon,
   ArrowTrendingDownIcon,
   BanknotesIcon,
@@ -15,6 +15,7 @@ import {
   DocumentChartBarIcon,
   CurrencyDollarIcon
 } from '@heroicons/react/24/outline';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function RevenuePage() {
   const [selectedPeriod, setSelectedPeriod] = useState<'today' | 'week' | 'month' | 'year'>('today');
@@ -32,8 +33,8 @@ export default function RevenuePage() {
     return revenueStats.map(stat => {
       let value: string | number = stat.value;
       let subtitle = stat.subtitle;
-      
-      switch(stat.id) {
+
+      switch (stat.id) {
         case 'revenue':
           value = `${(currentData.revenue / 1000000).toFixed(1)}M`;
           // Tạo subtitle với change percentage
@@ -51,7 +52,7 @@ export default function RevenuePage() {
           value = `${(currentData.avgOrderValue / 1000).toFixed(0)}K`;
           break;
       }
-      
+
       return { ...stat, value, subtitle };
     });
   }, [currentData]);
@@ -59,26 +60,14 @@ export default function RevenuePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
-      <div className="mb-12">
-        <div className="inline-block mb-4">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm font-medium">
-            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-            Revenue Analytics
-          </span>
-        </div>
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-5xl font-bold text-white mb-4">
-              Doanh thu & Báo cáo
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 mt-2">
-                Revenue Analytics
-              </span>
-            </h1>
-            <p className="text-gray-400 text-lg">
-              Theo dõi và phân tích doanh thu chi tiết của nhà hàng
-            </p>
-          </div>
-          <div className="flex gap-3">
+      <PageHeader
+        theme="green"
+        badgeText="Revenue Analytics"
+        titleVietnamese="Doanh thu & Báo cáo"
+        titleEnglish="Revenue Analytics"
+        description="Theo dõi và phân tích doanh thu chi tiết của nhà hàng"
+        actions={
+          <>
             <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-green-500/30 transition-all duration-300 flex items-center gap-2 cursor-pointer">
               <ArrowPathIcon className="w-5 h-5 text-gray-400 group-hover:text-green-400 transition-colors" />
               <span>Làm mới</span>
@@ -87,9 +76,9 @@ export default function RevenuePage() {
               <DocumentChartBarIcon className="w-5 h-5" />
               <span>Xuất báo cáo</span>
             </button>
-          </div>
-        </div>
-      </div>
+          </>
+        }
+      />
 
       {/* Period Selector */}
       <div className="flex flex-wrap gap-3 mb-8">
@@ -97,19 +86,18 @@ export default function RevenuePage() {
           <button
             key={period.key}
             onClick={() => setSelectedPeriod(period.key as typeof selectedPeriod)}
-            className={`px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center gap-3 cursor-pointer ${
-              selectedPeriod === period.key
+            className={`px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center gap-3 cursor-pointer ${selectedPeriod === period.key
                 ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg shadow-green-500/30 scale-105'
                 : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white hover:scale-105'
-            }`}
+              }`}
           >
             <span className="text-2xl">{period.icon}</span>
             <div className="text-left">
               <p className="font-semibold">{period.label}</p>
               <p className="text-xs opacity-75">
-                {period.key === 'today' ? 'Theo giờ' : 
-                 period.key === 'week' ? '7 ngày qua' :
-                 period.key === 'month' ? '30 ngày qua' : '12 tháng qua'}
+                {period.key === 'today' ? 'Theo giờ' :
+                  period.key === 'week' ? '7 ngày qua' :
+                    period.key === 'month' ? '30 ngày qua' : '12 tháng qua'}
               </p>
             </div>
           </button>
@@ -135,7 +123,7 @@ export default function RevenuePage() {
         {/* Daily Revenue Chart */}
         <div className="relative bg-gradient-to-br from-blue-600/20 to-cyan-600/20 backdrop-blur-xl border border-blue-500/30 rounded-3xl p-8 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-cyan-500/5"></div>
-          
+
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -151,7 +139,7 @@ export default function RevenuePage() {
               {dailyRevenue.map((item, index) => {
                 const maxRevenue = Math.max(...dailyRevenue.map(d => d.revenue));
                 const percentage = (item.revenue / maxRevenue) * 100;
-                
+
                 return (
                   <div key={index} className="group">
                     <div className="flex items-center justify-between mb-2">
@@ -164,7 +152,7 @@ export default function RevenuePage() {
                       </div>
                     </div>
                     <div className="h-3 bg-white/5 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-500 group-hover:from-blue-400 group-hover:to-cyan-400"
                         style={{ width: `${percentage}%` }}
                       ></div>
@@ -179,7 +167,7 @@ export default function RevenuePage() {
         {/* Top Products */}
         <div className="relative bg-gradient-to-br from-orange-600/20 to-amber-600/20 backdrop-blur-xl border border-orange-500/30 rounded-3xl p-8 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-amber-500/5"></div>
-          
+
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -198,12 +186,11 @@ export default function RevenuePage() {
                   className="group relative bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 rounded-xl p-4 hover:scale-105 transition-all duration-300"
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-10 h-10 bg-gradient-to-r ${
-                      index === 0 ? 'from-yellow-500 to-amber-500' :
-                      index === 1 ? 'from-gray-400 to-gray-500' :
-                      index === 2 ? 'from-orange-500 to-amber-600' :
-                      'from-blue-500 to-cyan-500'
-                    } rounded-xl flex items-center justify-center text-white font-bold shadow-lg`}>
+                    <div className={`w-10 h-10 bg-gradient-to-r ${index === 0 ? 'from-yellow-500 to-amber-500' :
+                        index === 1 ? 'from-gray-400 to-gray-500' :
+                          index === 2 ? 'from-orange-500 to-amber-600' :
+                            'from-blue-500 to-cyan-500'
+                      } rounded-xl flex items-center justify-center text-white font-bold shadow-lg`}>
                       {index + 1}
                     </div>
                     <div className="flex-1 min-w-0">
@@ -235,7 +222,7 @@ export default function RevenuePage() {
         {/* Payment Methods */}
         <div className="relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-8 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5"></div>
-          
+
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -260,7 +247,7 @@ export default function RevenuePage() {
                     </div>
                   </div>
                   <div className="h-3 bg-white/5 rounded-full overflow-hidden">
-                    <div 
+                    <div
                       className={`h-full bg-gradient-to-r ${method.color} rounded-full transition-all duration-500`}
                       style={{ width: `${method.percentage}%` }}
                     ></div>
@@ -281,7 +268,7 @@ export default function RevenuePage() {
         {/* Revenue by Time Slot */}
         <div className="relative bg-gradient-to-br from-green-600/20 to-emerald-600/20 backdrop-blur-xl border border-green-500/30 rounded-3xl p-8 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/5"></div>
-          
+
           <div className="relative">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -310,7 +297,7 @@ export default function RevenuePage() {
                       {(slot.revenue / 1000000).toFixed(1)}M
                     </p>
                     <div className="mt-3 h-2 bg-white/5 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className={`h-full bg-gradient-to-r ${slot.color} rounded-full`}
                         style={{ width: `${slot.percentage * 2.5}%` }}
                       ></div>
@@ -336,7 +323,7 @@ export default function RevenuePage() {
       {/* Comparison & Insights */}
       <div className="relative bg-gradient-to-br from-indigo-600/20 to-violet-600/20 backdrop-blur-xl border border-indigo-500/30 rounded-3xl p-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-violet-500/5"></div>
-        
+
         <div className="relative">
           <div className="flex items-center justify-between mb-6">
             <div>

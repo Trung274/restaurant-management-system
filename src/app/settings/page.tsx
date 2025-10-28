@@ -21,6 +21,7 @@ import {
   DocumentTextIcon,
   CheckIcon
 } from '@heroicons/react/24/outline';
+import PageHeader from '@/components/ui/PageHeader';
 
 export default function SettingsPage() {
   const [selectedSection, setSelectedSection] = useState('general');
@@ -348,8 +349,8 @@ export default function SettingsPage() {
                   <div
                     key={index}
                     className={`relative p-6 rounded-2xl cursor-pointer transition-all duration-300 border-2 ${theme.active
-                        ? 'border-pink-500/50 bg-gradient-to-br from-pink-500/10 to-rose-500/10'
-                        : 'border-white/10 bg-white/5 hover:border-white/20'
+                      ? 'border-pink-500/50 bg-gradient-to-br from-pink-500/10 to-rose-500/10'
+                      : 'border-white/10 bg-white/5 hover:border-white/20'
                       }`}
                   >
                     <div className={`w-full h-24 bg-gradient-to-br ${theme.preview} rounded-xl mb-4`}></div>
@@ -420,8 +421,8 @@ export default function SettingsPage() {
                 <div
                   key={index}
                   className={`p-6 rounded-2xl border-2 transition-all ${method.enabled
-                      ? `bg-gradient-to-br ${method.color}/10 border-${method.color.split(' ')[1]}/20`
-                      : 'bg-white/5 border-white/10'
+                    ? `bg-gradient-to-br ${method.color}/10 border-${method.color.split(' ')[1]}/20`
+                    : 'bg-white/5 border-white/10'
                     }`}
                 >
                   <div className="flex items-center justify-between mb-4">
@@ -492,8 +493,8 @@ export default function SettingsPage() {
                   <div
                     key={index}
                     className={`p-4 rounded-xl cursor-pointer transition-all border-2 ${lang.active
-                        ? 'bg-gradient-to-br from-cyan-500/10 to-teal-500/10 border-cyan-500/30'
-                        : 'bg-white/5 border-white/10 hover:border-white/20'
+                      ? 'bg-gradient-to-br from-cyan-500/10 to-teal-500/10 border-cyan-500/30'
+                      : 'bg-white/5 border-white/10 hover:border-white/20'
                       }`}
                   >
                     <div className="flex items-center justify-between">
@@ -580,8 +581,8 @@ export default function SettingsPage() {
                 <div
                   key={index}
                   className={`p-6 rounded-2xl border transition-all ${integration.connected
-                      ? `bg-gradient-to-br from-white/5 to-white/0 border-white/20`
-                      : 'bg-white/5 border-white/10'
+                    ? `bg-gradient-to-br from-white/5 to-white/0 border-white/20`
+                    : 'bg-white/5 border-white/10'
                     }`}
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -602,8 +603,8 @@ export default function SettingsPage() {
                   </div>
                   <button
                     className={`w-full py-2.5 rounded-lg font-medium transition-all ${integration.connected
-                        ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
-                        : `bg-gradient-to-r ${integration.color} text-white hover:shadow-lg`
+                      ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
+                      : `bg-gradient-to-r ${integration.color} text-white hover:shadow-lg`
                       }`}
                   >
                     {integration.connected ? 'Cấu hình' : 'Kết nối'}
@@ -662,23 +663,13 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
-      <div className="mb-12">
-        <div className="inline-block mb-4">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-slate-500/10 border border-slate-500/20 rounded-full text-slate-400 text-sm font-medium">
-            <span className="w-2 h-2 bg-slate-400 rounded-full animate-pulse"></span>
-            System Settings
-          </span>
-        </div>
-        <h1 className="text-5xl font-bold text-white mb-4">
-          Cài đặt hệ thống
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-slate-400 to-gray-500 mt-2">
-            System Settings
-          </span>
-        </h1>
-        <p className="text-gray-400 text-lg">
-          Tùy chỉnh và quản lý cấu hình hệ thống
-        </p>
-      </div>
+      <PageHeader
+        theme="slate"
+        badgeText="System Settings"
+        titleVietnamese="Cài đặt hệ thống"
+        titleEnglish="System Settings"
+        description="Tùy chỉnh và quản lý cấu hình hệ thống"
+      />
 
       {/* Settings Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -749,10 +740,10 @@ export default function SettingsPage() {
                   onClick={handleSave}
                   disabled={saveStatus === 'saving'}
                   className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 ${saveStatus === 'saved'
-                      ? 'bg-green-600 text-white'
-                      : saveStatus === 'saving'
-                        ? 'bg-white/10 text-gray-400 cursor-not-allowed'
-                        : `bg-gradient-to-r ${selectedConfig?.gradient} text-white hover:shadow-lg hover:scale-105`
+                    ? 'bg-green-600 text-white'
+                    : saveStatus === 'saving'
+                      ? 'bg-white/10 text-gray-400 cursor-not-allowed'
+                      : `bg-gradient-to-r ${selectedConfig?.gradient} text-white hover:shadow-lg hover:scale-105`
                     }`}
                 >
                   {saveStatus === 'saved' ? (

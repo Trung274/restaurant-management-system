@@ -13,6 +13,8 @@ import {
   ClockIcon,
   StarIcon
 } from '@heroicons/react/24/outline';
+import PageHeader from '@/components/ui/PageHeader';
+import SearchBar from '@/components/ui/SearchBar';
 
 export default function StaffPage() {
   const [selectedStatus, setSelectedStatus] = useState('all');
@@ -58,23 +60,13 @@ export default function StaffPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
-      <div className="mb-12">
-        <div className="inline-block mb-4">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-sm font-medium">
-            <span className="w-2 h-2 bg-sky-400 rounded-full animate-pulse"></span>
-            Staff Management
-          </span>
-        </div>
-        <h1 className="text-5xl font-bold text-white mb-4">
-          Quản lý nhân viên
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400 mt-2">
-            Staff Management
-          </span>
-        </h1>
-        <p className="text-gray-400 text-lg">
-          Quản lý thông tin và hiệu suất làm việc của nhân viên
-        </p>
-      </div>
+      <PageHeader
+        theme="sky"
+        badgeText="Staff Management"
+        titleVietnamese="Quản lý nhân viên"
+        titleEnglish="Staff Management"
+        description="Quản lý thông tin và hiệu suất làm việc của nhân viên"
+      />
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -93,21 +85,12 @@ export default function StaffPage() {
       {/* Search & Actions */}
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         {/* Search */}
-        <div className="flex-1">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div className="relative flex items-center">
-              <MagnifyingGlassIcon className="absolute left-4 w-5 h-5 text-gray-400 group-hover:text-purple-400 transition-colors" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm nhân viên theo tên, email, bộ phận..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-500/50 focus:bg-white/10 transition-all"
-              />
-            </div>
-          </div>
-        </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Tìm kiếm nhân viên theo tên, email, bộ phận..."
+          theme="sky"
+        />
 
         {/* Add Staff Button */}
         <button className="group relative px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
@@ -123,8 +106,8 @@ export default function StaffPage() {
           <button
             onClick={() => setSelectedStatus('all')}
             className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${selectedStatus === 'all'
-                ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/30'
-                : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+              ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/30'
+              : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
               }`}
           >
             Tất cả
@@ -136,8 +119,8 @@ export default function StaffPage() {
                 key={key}
                 onClick={() => setSelectedStatus(key)}
                 className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedStatus === key
-                    ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
-                    : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
+                  ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
+                  : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
                   }`}
               >
                 <Icon className="w-4 h-4" />
@@ -328,8 +311,8 @@ export default function StaffPage() {
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <div className={`absolute -top-2 -left-2 w-8 h-8 bg-gradient-to-r ${index === 0 ? 'from-yellow-500 to-amber-500' :
-                        index === 1 ? 'from-gray-400 to-gray-500' :
-                          'from-orange-500 to-amber-600'
+                      index === 1 ? 'from-gray-400 to-gray-500' :
+                        'from-orange-500 to-amber-600'
                       } rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
                       {index + 1}
                     </div>

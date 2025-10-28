@@ -3,8 +3,8 @@
 import { useState, useMemo } from 'react';
 import { orders, statusConfig, ordersStats } from './mockData';
 import StatsCard from '@/components/ui/StatsCard';
-import { 
-  MagnifyingGlassIcon, 
+import {
+  MagnifyingGlassIcon,
   FunnelIcon,
   PlusIcon,
   ClockIcon,
@@ -12,12 +12,15 @@ import {
   XCircleIcon,
   TruckIcon
 } from '@heroicons/react/24/outline';
+import PageHeader from '@/components/ui/PageHeader';
+import SearchBar from '@/components/ui/SearchBar';
 
 export default function OrdersPage() {
   const [selectedStatus, setSelectedStatus] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredOrders = selectedStatus === 'all' 
-    ? orders 
+  const filteredOrders = selectedStatus === 'all'
+    ? orders
     : orders.filter(order => order.status === selectedStatus);
 
   const totalOrders = orders.length;
@@ -30,8 +33,8 @@ export default function OrdersPage() {
   const statsData = useMemo(() => {
     return ordersStats.map(stat => {
       let value = stat.value;
-      
-      switch(stat.id) {
+
+      switch (stat.id) {
         case 'total':
           value = totalOrders;
           break;
@@ -48,7 +51,6 @@ export default function OrdersPage() {
           value = cancelledOrders;
           break;
       }
-      
       return { ...stat, value };
     });
   }, [totalOrders, pendingOrders, processingOrders, completedOrders, cancelledOrders]);
@@ -56,23 +58,13 @@ export default function OrdersPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
-      <div className="mb-12">
-  <div className="inline-block mb-4">
-    <span className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium">
-      <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-      Order Management
-    </span>
-  </div>
-  <h1 className="text-5xl font-bold text-white mb-4">
-    Quản lý đơn hàng
-    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400 mt-2">
-      Orders Management
-    </span>
-  </h1>
-  <p className="text-gray-400 text-lg">
-    Theo dõi và xử lý đơn hàng của khách hàng
-  </p>
-</div>
+      <PageHeader
+        theme="purple"
+        badgeText="Order Management"
+        titleVietnamese="Quản lý đơn hàng"
+        titleEnglish="Orders Management"
+        description="Theo dõi và xử lý đơn hàng của khách hàng"
+      />
 
       {/* Stats Overview - Sử dụng StatsCard component */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
@@ -91,19 +83,12 @@ export default function OrdersPage() {
       {/* Filters & Actions */}
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         {/* Search */}
-        <div className="flex-1">
-          <div className="relative group">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl blur opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div className="relative flex items-center">
-              <MagnifyingGlassIcon className="absolute left-4 w-5 h-5 text-gray-400 group-hover:text-blue-400 transition-colors" />
-              <input
-                type="text"
-                placeholder="Tìm kiếm đơn hàng theo mã, khách hàng, bàn..."
-                className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
-              />
-            </div>
-          </div>
-        </div>
+        <SearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Tìm kiếm đơn hàng theo mã, khách hàng, bàn..."
+          theme="purple"
+        />
 
         {/* Filter Button */}
         <button className="group relative px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-blue-500/30 transition-all duration-300 flex items-center gap-2 cursor-pointer">
@@ -122,11 +107,10 @@ export default function OrdersPage() {
       <div className="flex flex-wrap gap-3 mb-8">
         <button
           onClick={() => setSelectedStatus('all')}
-          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${
-            selectedStatus === 'all'
-              ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30'
-              : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
-          }`}
+          className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${selectedStatus === 'all'
+            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/30'
+            : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+            }`}
         >
           Tất cả
         </button>
@@ -134,11 +118,10 @@ export default function OrdersPage() {
           <button
             key={key}
             onClick={() => setSelectedStatus(key)}
-            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
-              selectedStatus === key
-                ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
-                : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
-            }`}
+            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedStatus === key
+              ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
+              : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
+              }`}
           >
             <config.icon className="w-4 h-4" />
             <span>{config.label}</span>
