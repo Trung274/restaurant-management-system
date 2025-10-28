@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import StatsCard from '@/components/ui/StatsCard';
 import { staffMembers, staffStats, statusConfig, positionConfig, performanceConfig } from './mockData';
-import { 
+import {
   MagnifyingGlassIcon,
   PlusIcon,
   PencilSquareIcon,
@@ -28,7 +28,7 @@ export default function StaffPage() {
 
     return staffStats.map(stat => {
       let value = stat.value;
-      switch(stat.id) {
+      switch (stat.id) {
         case 'total':
           value = totalStaff;
           break;
@@ -50,8 +50,8 @@ export default function StaffPage() {
     const statusMatch = selectedStatus === 'all' || staff.status === selectedStatus;
     const positionMatch = selectedPosition === 'all' || staff.position === selectedPosition;
     const searchMatch = staff.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                       staff.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                       staff.department.toLowerCase().includes(searchQuery.toLowerCase());
+      staff.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      staff.department.toLowerCase().includes(searchQuery.toLowerCase());
     return statusMatch && positionMatch && searchMatch;
   });
 
@@ -60,14 +60,14 @@ export default function StaffPage() {
       {/* Header */}
       <div className="mb-12">
         <div className="inline-block mb-4">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium">
-            <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-sm font-medium">
+            <span className="w-2 h-2 bg-sky-400 rounded-full animate-pulse"></span>
             Staff Management
           </span>
         </div>
         <h1 className="text-5xl font-bold text-white mb-4">
           Quản lý nhân viên
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500 mt-2">
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-blue-400 mt-2">
             Staff Management
           </span>
         </h1>
@@ -122,11 +122,10 @@ export default function StaffPage() {
         <div className="flex flex-wrap gap-3">
           <button
             onClick={() => setSelectedStatus('all')}
-            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${
-              selectedStatus === 'all'
+            className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 cursor-pointer ${selectedStatus === 'all'
                 ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/30'
                 : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
-            }`}
+              }`}
           >
             Tất cả
           </button>
@@ -136,11 +135,10 @@ export default function StaffPage() {
               <button
                 key={key}
                 onClick={() => setSelectedStatus(key)}
-                className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
-                  selectedStatus === key
+                className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedStatus === key
                     ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                     : `bg-gradient-to-r ${config.bg} border ${config.border} ${config.text} hover:scale-105`
-                }`}
+                  }`}
               >
                 <Icon className="w-4 h-4" />
                 <span>{config.label}</span>
@@ -150,7 +148,7 @@ export default function StaffPage() {
         </div>
 
         {/* Position Filter */}
-        <select 
+        <select
           value={selectedPosition}
           onChange={(e) => setSelectedPosition(e.target.value)}
           className="px-6 py-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 hover:border-purple-500/30 transition-all duration-300 focus:outline-none focus:border-purple-500/50 cursor-pointer"
@@ -289,7 +287,7 @@ export default function StaffPage() {
           <p className="text-gray-400 mb-6">
             Thử tìm kiếm với từ khóa khác hoặc điều chỉnh bộ lọc
           </p>
-          <button 
+          <button
             onClick={() => {
               setSelectedStatus('all');
               setSelectedPosition('all');
@@ -305,7 +303,7 @@ export default function StaffPage() {
       {/* Top Performers Section */}
       <div className="mt-12 relative bg-gradient-to-br from-purple-600/20 to-pink-600/20 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-pink-500/5"></div>
-        
+
         <div className="relative">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -329,11 +327,10 @@ export default function StaffPage() {
               >
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <div className={`absolute -top-2 -left-2 w-8 h-8 bg-gradient-to-r ${
-                      index === 0 ? 'from-yellow-500 to-amber-500' :
-                      index === 1 ? 'from-gray-400 to-gray-500' :
-                      'from-orange-500 to-amber-600'
-                    } rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
+                    <div className={`absolute -top-2 -left-2 w-8 h-8 bg-gradient-to-r ${index === 0 ? 'from-yellow-500 to-amber-500' :
+                        index === 1 ? 'from-gray-400 to-gray-500' :
+                          'from-orange-500 to-amber-600'
+                      } rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
                       {index + 1}
                     </div>
                     <img

@@ -57,22 +57,22 @@ export default function OrdersPage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
       <div className="mb-12">
-        <div className="inline-block mb-4">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-blue-400 text-sm font-medium">
-            <span className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></span>
-            Order Management
-          </span>
-        </div>
-        <h1 className="text-5xl font-bold text-white mb-4">
-          Quản lý đơn hàng
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mt-2">
-            Orders Management
-          </span>
-        </h1>
-        <p className="text-gray-400 text-lg">
-          Theo dõi và xử lý đơn hàng của khách hàng
-        </p>
-      </div>
+  <div className="inline-block mb-4">
+    <span className="inline-flex items-center gap-2 px-4 py-2 bg-purple-500/10 border border-purple-500/20 rounded-full text-purple-400 text-sm font-medium">
+      <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
+      Order Management
+    </span>
+  </div>
+  <h1 className="text-5xl font-bold text-white mb-4">
+    Quản lý đơn hàng
+    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-fuchsia-400 mt-2">
+      Orders Management
+    </span>
+  </h1>
+  <p className="text-gray-400 text-lg">
+    Theo dõi và xử lý đơn hàng của khách hàng
+  </p>
+</div>
 
       {/* Stats Overview - Sử dụng StatsCard component */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">

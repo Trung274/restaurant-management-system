@@ -17,7 +17,7 @@ export default function DashboardPage() {
         </div>
         <h1 className="text-5xl font-bold text-white mb-4">
           Chào mừng trở lại
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mt-2">
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mt-2">
             Nhà hàng ABCDE
           </span>
         </h1>

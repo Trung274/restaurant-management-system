@@ -3,7 +3,7 @@
 import { useState, useMemo } from 'react';
 import { menuItems, categories, categoryConfig, menuStats } from './mockData';
 import StatsCard from '@/components/ui/StatsCard';
-import { 
+import {
   MagnifyingGlassIcon,
   PlusIcon,
   PencilSquareIcon,
@@ -21,7 +21,7 @@ export default function MenuPage() {
   const filteredItems = menuItems.filter(item => {
     const categoryMatch = selectedCategory === 'Tất cả' || item.category === selectedCategory;
     const searchMatch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                       item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      item.description.toLowerCase().includes(searchQuery.toLowerCase());
     return categoryMatch && searchMatch;
   });
 
@@ -34,8 +34,8 @@ export default function MenuPage() {
   const statsData = useMemo(() => {
     return menuStats.map(stat => {
       let value = stat.value;
-      
-      switch(stat.id) {
+
+      switch (stat.id) {
         case 'total':
           value = totalItems;
           break;
@@ -49,7 +49,7 @@ export default function MenuPage() {
           value = outOfStockItems;
           break;
       }
-      
+
       return { ...stat, value };
     });
   }, [totalItems, availableItems, popularItems, outOfStockItems]);
@@ -59,14 +59,14 @@ export default function MenuPage() {
       {/* Header */}
       <div className="mb-12">
         <div className="inline-block mb-4">
-          <span className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full text-orange-400 text-sm font-medium">
-            <span className="w-2 h-2 bg-orange-400 rounded-full animate-pulse"></span>
+          <span className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/20 rounded-full text-amber-400 text-sm font-medium">
+            <span className="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
             Menu Management
           </span>
         </div>
         <h1 className="text-5xl font-bold text-white mb-4">
           Quản lý thực đơn
-          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-500 mt-2">
+          <span className="block text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-400 mt-2">
             Menu Management
           </span>
         </h1>
@@ -123,11 +123,10 @@ export default function MenuPage() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
-                selectedCategory === category
+              className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${selectedCategory === category
                   ? `bg-gradient-to-r ${config.gradient} text-white shadow-lg`
                   : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white hover:scale-105'
-              }`}
+                }`}
             >
               <span className="text-lg">{config.icon}</span>
               <span>{category}</span>
@@ -140,13 +139,12 @@ export default function MenuPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredItems.map((item) => {
           const isOutOfStock = item.status === 'out_of_stock';
-          
+
           return (
             <div
               key={item.id}
-              className={`group relative bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer ${
-                isOutOfStock ? 'opacity-60' : ''
-              }`}
+              className={`group relative bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer ${isOutOfStock ? 'opacity-60' : ''
+                }`}
             >
               {/* Hover glow effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
@@ -158,7 +156,7 @@ export default function MenuPage() {
                   alt={item.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
-                
+
                 {/* Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-2">
                   {item.popular && (
@@ -212,11 +210,10 @@ export default function MenuPage() {
                     {[...Array(5)].map((_, i) => (
                       <StarIconSolid
                         key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(item.rating)
+                        className={`w-4 h-4 ${i < Math.floor(item.rating)
                             ? 'text-yellow-400'
                             : 'text-gray-600'
-                        }`}
+                          }`}
                       />
                     ))}
                   </div>
@@ -259,7 +256,7 @@ export default function MenuPage() {
           <p className="text-gray-400 mb-6">
             Thử tìm kiếm với từ khóa khác hoặc chọn danh mục khác
           </p>
-          <button 
+          <button
             onClick={() => {
               setSelectedCategory('Tất cả');
               setSearchQuery('');
@@ -274,7 +271,7 @@ export default function MenuPage() {
       {/* Best Sellers Section */}
       <div className="mt-12 relative bg-gradient-to-br from-orange-600/20 to-amber-600/20 backdrop-blur-xl border border-orange-500/30 rounded-3xl p-8 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-amber-500/5"></div>
-        
+
         <div className="relative">
           <div className="flex items-center justify-between mb-6">
             <div>
@@ -298,11 +295,10 @@ export default function MenuPage() {
               >
                 <div className="flex items-center gap-4">
                   <div className="relative">
-                    <div className={`absolute -top-2 -left-2 w-8 h-8 bg-gradient-to-r ${
-                      index === 0 ? 'from-yellow-500 to-amber-500' :
-                      index === 1 ? 'from-gray-400 to-gray-500' :
-                      'from-orange-500 to-amber-600'
-                    } rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
+                    <div className={`absolute -top-2 -left-2 w-8 h-8 bg-gradient-to-r ${index === 0 ? 'from-yellow-500 to-amber-500' :
+                        index === 1 ? 'from-gray-400 to-gray-500' :
+                          'from-orange-500 to-amber-600'
+                      } rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
                       {index + 1}
                     </div>
                     <img
