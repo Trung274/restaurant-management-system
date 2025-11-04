@@ -11,7 +11,7 @@ export default function DashboardPage() {
       {/* Header */}
       <PageHeader
         theme="blue"
-        badgeText="Tổng quan nhà hàng"
+        badgeText="Restaurant Overview"
         titleVietnamese="Chào mừng trở lại"
         titleEnglish="Nhà hàng ABCDE"
         description="Theo dõi hoạt động kinh doanh và hiệu suất nhà hàng"
