@@ -4,9 +4,9 @@ import { ReactNode, useState } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import Header from '@/components/layout/Header';
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default function ProtectedLayout({ children }: { children: ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-
+  
   return (
     <div className="flex min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900">
       {/* Sidebar */}

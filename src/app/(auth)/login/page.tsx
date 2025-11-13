@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import toast from 'react-hot-toast';
 import {
   EnvelopeIcon,
   LockClosedIcon,
@@ -13,27 +14,94 @@ import {
   UserGroupIcon,
   ShoppingBagIcon,
   CubeIcon,
-  SparklesIcon
+  SparklesIcon,
+  ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
+import { useAuth, useRedirectIfAuthenticated } from '@/hooks/useAuth';
 
 export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { login, error, clearError, isLoading } = useAuth();
+  const { isAuthenticated } = useRedirectIfAuthenticated();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+
+  // Clear error when component unmounts or inputs change
+  useEffect(() => {
+    return () => clearError();
+  }, [clearError]);
+
+  useEffect(() => {
+    if (email || password) {
+      clearError();
+    }
+  }, [email, password, clearError]);
+
+  // Show toast when error changes
+  useEffect(() => {
+    if (error) {
+      toast.error(error, {
+        duration: 4000,
+        position: 'top-right',
+        style: {
+          background: 'rgba(17, 24, 39, 0.95)',
+          color: '#fff',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          backdropFilter: 'blur(10px)',
+        },
+        iconTheme: {
+          primary: '#ef4444',
+          secondary: '#fff',
+        },
+      });
+    }
+  }, [error]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      // Redirect to dashboard
-      window.location.href = '/dashboard';
-    }, 1500);
+    try {
+      await login({ email, password, rememberMe });
+
+      // Show success toast
+      toast.success('Đăng nhập thành công!', {
+        duration: 2000,
+        position: 'top-right',
+        style: {
+          background: 'rgba(17, 24, 39, 0.95)',
+          color: '#fff',
+          border: '1px solid rgba(34, 197, 94, 0.3)',
+          backdropFilter: 'blur(10px)',
+        },
+        iconTheme: {
+          primary: '#22c55e',
+          secondary: '#fff',
+        },
+      });
+
+      // Small delay to show toast before redirect
+      setTimeout(() => {
+        const from = searchParams.get('from') || '/dashboard';
+        router.push(from);
+      }, 500);
+    } catch (error) {
+      // Error is handled by store and toast will show via useEffect
+      console.error('Login failed:', error);
+    }
   };
+
+  // Don't render form if already authenticated (will redirect)
+  if (isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 flex items-center justify-center">
+        <div className="text-white text-lg">Đang chuyển hướng...</div>
+      </div>
+    );
+  }
 
   const features = [
     {
@@ -109,6 +177,29 @@ export default function LoginPage() {
             </p>
           </div>
 
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-3">
+              <ExclamationCircleIcon className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" />
+              <div className="flex-1">
+                <p className="text-red-400 text-sm font-medium">Đăng nhập thất bại</p>
+                <p className="text-red-300/80 text-sm mt-1">{error}</p>
+              </div>
+              <button
+                onClick={clearError}
+                className="text-red-400 hover:text-red-300 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
+
           {/* Login Form */}
           <form onSubmit={handleLogin} className="space-y-6">
             {/* Email Input */}
@@ -124,9 +215,10 @@ export default function LoginPage() {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="admin@restaurant.com"
+                    placeholder="admin@example.com"
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
+                    disabled={isLoading}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                 </div>
               </div>
@@ -147,12 +239,14 @@ export default function LoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="••••••••"
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all"
+                    disabled={isLoading}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl pl-12 pr-12 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500/50 focus:bg-white/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 text-gray-400 hover:text-white transition-colors"
+                    disabled={isLoading}
+                    className="absolute right-4 text-gray-400 hover:text-white transition-colors disabled:opacity-50"
                   >
                     {showPassword ? (
                       <EyeSlashIcon className="w-5 h-5" />
@@ -172,9 +266,10 @@ export default function LoginPage() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
+                    disabled={isLoading}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-white/10 rounded-full peer-checked:bg-gradient-to-r peer-checked:from-blue-600 peer-checked:to-purple-600 transition-all"></div>
+                  <div className="w-11 h-6 bg-white/10 rounded-full peer-checked:bg-gradient-to-r peer-checked:from-blue-600 peer-checked:to-purple-600 transition-all peer-disabled:opacity-50"></div>
                   <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-all peer-checked:translate-x-5"></div>
                 </div>
                 <span className="ml-3 text-sm text-gray-400 group-hover:text-white transition-colors">
@@ -182,19 +277,20 @@ export default function LoginPage() {
                 </span>
               </label>
 
-              <Link
-                href="/forgot-password"
-                className="text-sm text-blue-400 hover:text-blue-300 transition-colors"
+              <button
+                type="button"
+                disabled={isLoading}
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
               >
                 Quên mật khẩu?
-              </Link>
+              </button>
             </div>
 
             {/* Login Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden cursor-pointer"
+              className="group relative w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 overflow-hidden cursor-pointer"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <span className="relative flex items-center justify-center gap-2">
@@ -212,6 +308,13 @@ export default function LoginPage() {
               </span>
             </button>
           </form>
+
+          {/* Demo credentials hint */}
+          <div className="mt-6 p-4 bg-blue-500/5 border border-blue-500/20 rounded-xl">
+            <p className="text-sm text-gray-400 text-center">
+              <span className="text-blue-400 font-medium">Demo:</span> admin@example.com / Admin@123
+            </p>
+          </div>
         </div>
       </div>
 
