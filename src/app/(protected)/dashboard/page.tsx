@@ -4,8 +4,11 @@ import StatsCard from '@/components/ui/StatsCard';
 import QuickActionCard from './components/QuickActionCard';
 import { dashboardStats, quickActions } from './mockData';
 import PageHeader from '@/components/ui/PageHeader';
+import { useRestaurantStore } from '@/stores/restaurantStore';
 
 export default function DashboardPage() {
+  const restaurant = useRestaurantStore(state => state.restaurant);
+  const restaurantName = restaurant?.name || 'Nhà hàng';
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
@@ -13,7 +16,7 @@ export default function DashboardPage() {
         theme="blue"
         badgeText="Restaurant Overview"
         titleVietnamese="Chào mừng trở lại"
-        titleEnglish="Nhà hàng ABCDE"
+        titleEnglish={restaurantName}
         description="Theo dõi hoạt động kinh doanh và hiệu suất nhà hàng"
       />
 

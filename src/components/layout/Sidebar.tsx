@@ -15,6 +15,7 @@ import {
     BellAlertIcon,
     XMarkIcon
 } from '@heroicons/react/24/outline';
+import { useRestaurantStore } from '@/stores/restaurantStore';
 
 const menuItems = [
     {
@@ -131,6 +132,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const pathname = usePathname();
+    const restaurant = useRestaurantStore(state => state.restaurant);
 
     return (
         <>
@@ -162,7 +164,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
                         <div className="relative bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/20 rounded-xl p-4">
                             <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-                                Nhà hàng ABCDE
+                                {restaurant?.name || 'Nhà hàng'}
                             </h1>
                             <p className="text-xs text-gray-400 mt-1">Management System</p>
                         </div>

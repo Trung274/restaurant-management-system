@@ -22,104 +22,16 @@ import {
   CheckIcon
 } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/ui/PageHeader';
+import { GeneralSettingsSection } from './components/GeneralSettingsSection';
 
 export default function SettingsPage() {
   const [selectedSection, setSelectedSection] = useState('general');
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
-
-  const handleSave = () => {
-    setSaveStatus('saving');
-    setTimeout(() => {
-      setSaveStatus('saved');
-      setTimeout(() => setSaveStatus('idle'), 2000);
-    }, 1000);
-  };
+  const selectedConfig = settingsSections.find(s => s.id === selectedSection);
 
   const renderSectionContent = () => {
     switch (selectedSection) {
       case 'general':
-        return (
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Tên nhà hàng
-                </label>
-                <input
-                  type="text"
-                  defaultValue="Nhà hàng ABCDE"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Số điện thoại
-                </label>
-                <input
-                  type="tel"
-                  defaultValue="024 1234 5678"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-all"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email liên hệ
-              </label>
-              <input
-                type="email"
-                defaultValue="contact@restaurant.com"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-all"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Địa chỉ
-              </label>
-              <textarea
-                rows={3}
-                defaultValue="123 Trần Duy Hưng, Cầu Giấy, Hà Nội"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-all resize-none"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Giờ mở cửa
-                </label>
-                <input
-                  type="time"
-                  defaultValue="08:00"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Giờ đóng cửa
-                </label>
-                <input
-                  type="time"
-                  defaultValue="22:00"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-all"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Mô tả nhà hàng
-              </label>
-              <textarea
-                rows={4}
-                defaultValue="Nhà hàng chuyên các món ăn Việt Nam truyền thống với không gian ấm cúng và phục vụ tận tình."
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-blue-500/50 transition-all resize-none"
-              />
-            </div>
-          </div>
-        );
+        return <GeneralSettingsSection gradient={selectedConfig?.gradient} />;
 
       case 'profile':
         return (
@@ -658,8 +570,6 @@ export default function SettingsPage() {
     }
   };
 
-  const selectedConfig = settingsSections.find(s => s.id === selectedSection);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
@@ -734,36 +644,6 @@ export default function SettingsPage() {
               {/* Section Content */}
               {renderSectionContent()}
 
-              {/* Save Button */}
-              <div className="flex items-center gap-4 mt-8 pt-8 border-t border-white/10">
-                <button
-                  onClick={handleSave}
-                  disabled={saveStatus === 'saving'}
-                  className={`px-8 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-2 ${saveStatus === 'saved'
-                    ? 'bg-green-600 text-white'
-                    : saveStatus === 'saving'
-                      ? 'bg-white/10 text-gray-400 cursor-not-allowed'
-                      : `bg-gradient-to-r ${selectedConfig?.gradient} text-white hover:shadow-lg hover:scale-105`
-                    }`}
-                >
-                  {saveStatus === 'saved' ? (
-                    <>
-                      <CheckIcon className="w-5 h-5" />
-                      Đã lưu
-                    </>
-                  ) : saveStatus === 'saving' ? (
-                    <>
-                      <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                      Đang lưu...
-                    </>
-                  ) : (
-                    'Lưu thay đổi'
-                  )}
-                </button>
-                <button className="px-8 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-semibold hover:bg-white/10 transition-all">
-                  Hủy bỏ
-                </button>
-              </div>
             </div>
           </div>
         </div>
