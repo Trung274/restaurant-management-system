@@ -14,10 +14,17 @@ import {
 } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/ui/PageHeader';
 import SearchBar from '@/components/ui/SearchBar';
+import CreateOrderOverlay from './components/CreateOrderOverlay';
 
 export default function OrdersPage() {
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+
+  const handleCreateOrder = (orderData: any) => {
+    console.log('New order created:', orderData);
+    // TODO: Add order to the list or send to backend
+  };
 
   const filteredOrders = selectedStatus === 'all'
     ? orders
@@ -97,7 +104,10 @@ export default function OrdersPage() {
         </button>
 
         {/* New Order Button */}
-        <button className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
+        <button
+          onClick={() => setIsOverlayOpen(true)}
+          className="group relative px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer"
+        >
           <PlusIcon className="w-5 h-5" />
           <span>Tạo đơn mới</span>
         </button>
@@ -224,6 +234,13 @@ export default function OrdersPage() {
           </button>
         </div>
       )}
+
+      {/* Create Order Overlay */}
+      <CreateOrderOverlay
+        isOpen={isOverlayOpen}
+        onClose={() => setIsOverlayOpen(false)}
+        onSubmit={handleCreateOrder}
+      />
     </div>
   );
 }

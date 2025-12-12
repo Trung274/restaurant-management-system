@@ -6,7 +6,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { hasPermission } from '@/lib/auth';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
-// Component cho phần General Settings
 export function GeneralSettingsSection({ gradient }: { gradient?: string }) {
   const { user } = useAuth();
   const { restaurant, isLoading, error, updateRestaurant, clearError } = useRestaurant();
