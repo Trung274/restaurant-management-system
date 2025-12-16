@@ -103,6 +103,7 @@ apiClient.interceptors.response.use(
 
       // Save new token (keep same remember me setting)
       tokenStorage.setToken(newAccessToken, !!tokenStorage.getRefreshToken());
+      tokenStorage.setRefreshToken(refreshToken);
 
       // Update original request header
       if (originalRequest.headers) {

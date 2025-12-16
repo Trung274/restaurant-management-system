@@ -1,4 +1,6 @@
-export const menuItems = [
+import type { MenuItemData } from './components';
+
+export const menuItems: MenuItemData[] = [
   {
     id: 1,
     name: 'Phở bò đặc biệt',

@@ -5,20 +5,21 @@ import { menuItems, categories, categoryConfig, menuStats } from './mockData';
 import StatsCard from '@/components/ui/StatsCard';
 import {
   MagnifyingGlassIcon,
-  PlusIcon,
-  PencilSquareIcon,
-  TrashIcon,
-  StarIcon,
-  FireIcon,
-  SparklesIcon
+  PlusIcon
 } from '@heroicons/react/24/outline';
-import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import PageHeader from '@/components/ui/PageHeader';
 import SearchBar from '@/components/ui/SearchBar';
+import { MenuItem, AddMenuItemOverlay, type MenuItemData } from './components';
+import ConfirmDeleteOverlay from '@/components/forms/ConfirmDeleteOverlay';
 
 export default function MenuPage() {
   const [selectedCategory, setSelectedCategory] = useState('Tất cả');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
+  const [editItem, setEditItem] = useState<MenuItemData | null>(null);
+  const [deleteItem, setDeleteItem] = useState<MenuItemData | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string>('');
 
   const filteredItems = menuItems.filter(item => {
     const categoryMatch = selectedCategory === 'Tất cả' || item.category === selectedCategory;
@@ -56,6 +57,36 @@ export default function MenuPage() {
     });
   }, [totalItems, availableItems, popularItems, outOfStockItems]);
 
+  const handleDeleteConfirm = async () => {
+    if (!deleteItem) return;
+
+    setIsDeleting(true);
+    setDeleteError('');
+
+    try {
+      // TODO: Replace with actual API call
+      // await deleteMenuItemAPI(deleteItem.id);
+
+      // Simulate API call with delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+
+      // Simulate random error for testing (remove in production)
+      if (Math.random() < 0.3) {
+        throw new Error('Không thể xóa món ăn. Vui lòng thử lại.');
+      }
+
+      console.log('Deleted menu item:', deleteItem);
+
+      // Only close on success
+      setDeleteItem(null);
+      setDeleteError('');
+    } catch (error) {
+      setDeleteError(error instanceof Error ? error.message : 'Không thể xóa món ăn. Vui lòng thử lại.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
       {/* Header */}
@@ -92,7 +123,10 @@ export default function MenuPage() {
         />
 
         {/* Add Menu Button */}
-        <button className="group relative px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
+        <button
+          onClick={() => setIsAddOverlayOpen(true)}
+          className="group relative px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer"
+        >
           <PlusIcon className="w-5 h-5" />
           <span>Thêm món mới</span>
         </button>
@@ -120,113 +154,19 @@ export default function MenuPage() {
 
       {/* Menu Items Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredItems.map((item) => {
-          const isOutOfStock = item.status === 'out_of_stock';
-
-          return (
-            <div
-              key={item.id}
-              className={`group relative bg-gradient-to-br from-white/5 to-white/0 backdrop-blur-sm border border-white/10 rounded-2xl overflow-hidden hover:scale-105 transition-all duration-300 cursor-pointer ${isOutOfStock ? 'opacity-60' : ''
-                }`}
-            >
-              {/* Hover glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-
-              {/* Image */}
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-
-                {/* Badges */}
-                <div className="absolute top-3 left-3 flex flex-col gap-2">
-                  {item.popular && (
-                    <span className="px-3 py-1 bg-gradient-to-r from-orange-500 to-amber-500 text-white text-xs font-bold rounded-full flex items-center gap-1 shadow-lg">
-                      <SparklesIcon className="w-3 h-3" />
-                      Popular
-                    </span>
-                  )}
-                  {item.spicy && (
-                    <span className="px-3 py-1 bg-gradient-to-r from-red-500 to-rose-500 text-white text-xs font-bold rounded-full flex items-center gap-1 shadow-lg">
-                      <FireIcon className="w-3 h-3" />
-                      Cay
-                    </span>
-                  )}
-                  {item.vegetarian && (
-                    <span className="px-3 py-1 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold rounded-full shadow-lg">
-                      🌱 Chay
-                    </span>
-                  )}
-                </div>
-
-                {isOutOfStock && (
-                  <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center">
-                    <span className="px-6 py-3 bg-red-600 text-white text-lg font-bold rounded-xl shadow-lg">
-                      Hết hàng
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div className="relative p-5">
-                {/* Category */}
-                <span className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full text-xs text-gray-400 mb-3">
-                  {item.category}
-                </span>
-
-                {/* Name */}
-                <h3 className="text-xl font-bold text-white mb-2 line-clamp-1">
-                  {item.name}
-                </h3>
-
-                {/* Description */}
-                <p className="text-sm text-gray-400 mb-4 line-clamp-2 min-h-[40px]">
-                  {item.description}
-                </p>
-
-                {/* Rating */}
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIconSolid
-                        key={i}
-                        className={`w-4 h-4 ${i < Math.floor(item.rating)
-                          ? 'text-yellow-400'
-                          : 'text-gray-600'
-                          }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-sm text-gray-400">
-                    {item.rating} ({item.reviews})
-                  </span>
-                </div>
-
-                {/* Price & Actions */}
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-400">Giá</p>
-                    <p className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-400">
-                      {item.price.toLocaleString('vi-VN')}đ
-                    </p>
-                  </div>
-
-                  <div className="flex gap-2">
-                    <button className="p-2 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:bg-white/10 hover:text-blue-400 hover:border-blue-500/30 transition-all">
-                      <PencilSquareIcon className="w-5 h-5" />
-                    </button>
-                    <button className="p-2 bg-white/5 border border-white/10 rounded-lg text-gray-400 hover:bg-white/10 hover:text-red-400 hover:border-red-500/30 transition-all">
-                      <TrashIcon className="w-5 h-5" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {filteredItems.map((item) => (
+          <MenuItem
+            key={item.id}
+            item={item}
+            onEdit={(item) => {
+              setEditItem(item);
+              setIsAddOverlayOpen(true);
+            }}
+            onDelete={(item) => {
+              setDeleteItem(item);
+            }}
+          />
+        ))}
       </div>
 
       {/* Empty State */}
@@ -303,6 +243,39 @@ export default function MenuPage() {
           </div>
         </div>
       </div>
+
+      {/* Add Menu Item Overlay */}
+      <AddMenuItemOverlay
+        isOpen={isAddOverlayOpen}
+        onClose={() => {
+          setIsAddOverlayOpen(false);
+          setEditItem(null);
+        }}
+        onSubmit={(menuItemData) => {
+          if (editItem) {
+            console.log('Update menu item:', menuItemData);
+            // TODO: Implement actual menu item update logic
+          } else {
+            console.log('New menu item:', menuItemData);
+            // TODO: Implement actual menu item creation logic
+          }
+        }}
+        editItem={editItem}
+      />
+
+      {/* Confirm Delete Overlay */}
+      <ConfirmDeleteOverlay
+        isOpen={!!deleteItem}
+        onClose={() => {
+          setDeleteItem(null);
+          setDeleteError('');
+        }}
+        onConfirm={handleDeleteConfirm}
+        title="Xóa món ăn"
+        description={`Bạn có chắc chắn muốn xóa món "${deleteItem?.name}" không?`}
+        isLoading={isDeleting}
+        error={deleteError}
+      />
     </div>
   );
 }
