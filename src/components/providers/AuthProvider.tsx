@@ -1,21 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/authStore';
 
 /**
  * AuthProvider - Initialize authentication on app load
  * 
- * This component should be placed in the root layout to ensure
- * user data is restored from cookies when the app loads
+ * With persist middleware, user data is automatically restored from localStorage
+ * We don't need to call checkAuth on every mount - it will be called when needed
  */
 export default function AuthProvider({ children }: { children: React.ReactNode }) {
-  const checkAuth = useAuthStore((state) => state.checkAuth);
-
-  useEffect(() => {
-    // Check and restore auth state on mount
-    checkAuth();
-  }, [checkAuth]);
+  // Persist middleware handles restoration automatically
+  // No need to call checkAuth here - it can clear data if API fails
 
   return <>{children}</>;
 }

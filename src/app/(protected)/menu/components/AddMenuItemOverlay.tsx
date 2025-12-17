@@ -4,15 +4,17 @@ import { useState, useEffect } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { categories } from '../mockData';
 import type { MenuItemData } from './MenuItem';
+import { toast } from '@/utils/toast';
 
 interface AddMenuItemOverlayProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (menuItemData: Partial<MenuItemData>) => void;
+    onSubmit: (menuItemData: Partial<MenuItemData>) => Promise<void>;
     editItem?: MenuItemData | null; // Optional item to edit
+    isLoading?: boolean;
 }
 
-export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem }: AddMenuItemOverlayProps) {
+export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem, isLoading = false }: AddMenuItemOverlayProps) {
     const isEditMode = !!editItem;
 
     const [formData, setFormData] = useState({
@@ -58,18 +60,18 @@ export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem
         }
     }, [isOpen, editItem]);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // Validate form
         if (!formData.name.trim() || !formData.description.trim() || !formData.image.trim()) {
-            alert('Vui lòng điền đầy đủ thông tin bắt buộc');
+            toast.warning('Vui lòng điền đầy đủ thông tin bắt buộc');
             return;
         }
 
         const price = parseFloat(formData.price);
         if (isNaN(price) || price <= 0) {
-            alert('Vui lòng nhập giá hợp lệ');
+            toast.warning('Vui lòng nhập giá hợp lệ');
             return;
         }
 
@@ -89,8 +91,8 @@ export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem
             reviews: editItem?.reviews || 0
         };
 
-        onSubmit(menuItemData);
-        onClose();
+        // Submit data - Parent handles success toast and closing
+        await onSubmit(menuItemData);
     };
 
     const handleInputChange = (field: string, value: any) => {
@@ -103,8 +105,8 @@ export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             {/* Backdrop */}
             <div
-                className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn cursor-pointer"
-                onClick={onClose}
+                className={`absolute inset-0 bg-black/60 backdrop-blur-sm animate-fadeIn ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                onClick={isLoading ? undefined : onClose}
             />
 
             {/* Modal */}
@@ -123,9 +125,12 @@ export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem
                         </div>
                         <button
                             onClick={onClose}
-                            className="p-2 hover:bg-white/10 rounded-xl transition-all duration-300 group cursor-pointer"
+                            disabled={isLoading}
+                            className={`p-2 rounded-xl transition-all duration-300 group ${isLoading
+                                ? 'opacity-50 cursor-not-allowed'
+                                : 'hover:bg-white/10 cursor-pointer'}`}
                         >
-                            <XMarkIcon className="w-6 h-6 text-white group-hover:rotate-90 transition-transform duration-300" />
+                            <XMarkIcon className={`w-6 h-6 text-white transition-transform duration-300 ${isLoading ? '' : 'group-hover:rotate-90'}`} />
                         </button>
                     </div>
                 </div>
@@ -360,15 +365,31 @@ export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                            disabled={isLoading}
+                            className={`flex-1 px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium transition-all duration-300 ${isLoading
+                                ? 'opacity-50 cursor-not-allowed'
+                                : 'hover:bg-white/10 cursor-pointer'}`}
                         >
                             Hủy
                         </button>
                         <button
                             type="submit"
-                            className="flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-orange-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
+                            disabled={isLoading}
+                            className={`flex-1 px-6 py-3 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 ${isLoading
+                                ? 'opacity-75 cursor-not-allowed'
+                                : 'hover:shadow-lg hover:shadow-orange-500/50 hover:scale-105 cursor-pointer'}`}
                         >
-                            {isEditMode ? 'Cập nhật' : 'Tạo món mới'}
+                            {isLoading ? (
+                                <>
+                                    <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    <span>Đang xử lý...</span>
+                                </>
+                            ) : (
+                                isEditMode ? 'Cập nhật' : 'Tạo món mới'
+                            )}
                         </button>
                     </div>
                 </form>

@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react';
 import { XMarkIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { menuItems, categories } from '../../menu/mockData';
+import { categories } from '../../menu/mockData';
 import { tables } from '../../tables/mockData';
 import { customers } from '../../customers/mockData';
+import { useMenuStore } from '@/stores/menuStore';
+import { toast } from '@/utils/toast';
 
 interface OrderItem {
     id: string;
-    menuItemId: number | '';
+    menuItemId: string | '';
     name: string;
     quantity: number;
     price: number;
@@ -27,6 +29,16 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
         { id: '1', menuItemId: '' as const, name: '', quantity: 1, price: 0 }
     ]);
     const [selectedCategory, setSelectedCategory] = useState('Tất cả');
+
+    // Get menu items from store
+    const { items: menuItems, isLoading: isLoadingMenu, fetchMenuItems } = useMenuStore();
+
+    // Fetch menu items when overlay opens (if not already loaded)
+    useEffect(() => {
+        if (isOpen && menuItems.length === 0) {
+            fetchMenuItems({ status: 'available' });
+        }
+    }, [isOpen, menuItems.length]);
 
     // Auto-calculate total
     const total = orderItems.reduce((sum, item) => sum + (item.quantity * item.price), 0);
@@ -63,8 +75,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
         ));
     };
 
-    const handleMenuItemSelect = (orderId: string, menuItemIdStr: string) => {
-        const menuItemId = menuItemIdStr ? parseInt(menuItemIdStr) : '';
+    const handleMenuItemSelect = (orderId: string, menuItemId: string) => {
         const selectedMenuItem = menuItems.find(item => item.id === menuItemId);
         if (selectedMenuItem) {
             setOrderItems(orderItems.map(item =>
@@ -80,13 +91,13 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
 
         // Validate form
         if (!customer.trim() || !table.trim()) {
-            alert('Vui lòng nhập tên khách hàng và số bàn');
+            toast.warning('Vui lòng nhập tên khách hàng và số bàn');
             return;
         }
 
         const validItems = orderItems.filter(item => item.menuItemId && item.price > 0);
         if (validItems.length === 0) {
-            alert('Vui lòng chọn ít nhất một món ăn');
+            toast.warning('Vui lòng chọn ít nhất một món ăn');
             return;
         }
 
@@ -231,7 +242,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
 
                         <div className="space-y-3">
                             {orderItems.map((item, index) => {
-                                const selectedMenuItem = typeof item.menuItemId === 'number' ? menuItems.find(m => m.id === item.menuItemId) : undefined;
+                                const selectedMenuItem = item.menuItemId ? menuItems.find(m => m.id === item.menuItemId) : undefined;
 
                                 return (
                                     <div
@@ -247,10 +258,13 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                                 <select
                                                     value={item.menuItemId === '' ? '' : item.menuItemId}
                                                     onChange={(e) => handleMenuItemSelect(item.id, e.target.value)}
-                                                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm cursor-pointer"
+                                                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                                                     required
+                                                    disabled={isLoadingMenu}
                                                 >
-                                                    <option value="" className="bg-gray-800">Chọn món ăn...</option>
+                                                    <option value="" className="bg-gray-800">
+                                                        {isLoadingMenu ? 'Đang tải menu...' : 'Chọn món ăn...'}
+                                                    </option>
                                                     {filteredMenuItems.map((menuItem) => (
                                                         <option key={menuItem.id} value={menuItem.id} className="bg-gray-800">
                                                             {menuItem.name} - {menuItem.price.toLocaleString('vi-VN')}đ

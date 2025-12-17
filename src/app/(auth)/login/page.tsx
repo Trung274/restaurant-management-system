@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import toast from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 import {
   EnvelopeIcon,
   LockClosedIcon,
@@ -44,20 +44,7 @@ export default function LoginPage() {
   // Show toast when error changes
   useEffect(() => {
     if (error) {
-      toast.error(error, {
-        duration: 4000,
-        position: 'top-right',
-        style: {
-          background: 'rgba(17, 24, 39, 0.95)',
-          color: '#fff',
-          border: '1px solid rgba(239, 68, 68, 0.3)',
-          backdropFilter: 'blur(10px)',
-        },
-        iconTheme: {
-          primary: '#ef4444',
-          secondary: '#fff',
-        },
-      });
+      toast.error(error);
     }
   }, [error]);
 
@@ -68,20 +55,7 @@ export default function LoginPage() {
       await login({ email, password, rememberMe });
 
       // Show success toast
-      toast.success('Đăng nhập thành công!', {
-        duration: 2000,
-        position: 'top-right',
-        style: {
-          background: 'rgba(17, 24, 39, 0.95)',
-          color: '#fff',
-          border: '1px solid rgba(34, 197, 94, 0.3)',
-          backdropFilter: 'blur(10px)',
-        },
-        iconTheme: {
-          primary: '#22c55e',
-          secondary: '#fff',
-        },
-      });
+      toast.success('Đăng nhập thành công!');
 
       // Small delay to show toast before redirect
       setTimeout(() => {

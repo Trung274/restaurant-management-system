@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { useAuth } from './useAuth';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/utils/toast';
 
 /**
  * Hook để tự động logout sau khi user không hoạt động trong thời gian nhất định
@@ -26,17 +26,8 @@ export const useSessionTimeout = (timeoutMs = 30 * 60 * 1000) => {
     }
 
     timeoutRef.current = setTimeout(() => {
-      toast.error('Phiên làm việc hết hạn!', {
-        duration: 4000,
-        position: 'top-center',
-        icon: '⏰',
-        style: {
-          background: '#1f2937',
-          color: '#fff',
-          border: '1px solid #ef4444',
-        },
-      });
-      
+      toast.custom('Phiên làm việc hết hạn!', '⏰');
+
       // Delay logout một chút để user thấy toast
       setTimeout(() => {
         logout();
@@ -48,7 +39,7 @@ export const useSessionTimeout = (timeoutMs = 30 * 60 * 1000) => {
     if (!isAuthenticated) return;
 
     const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
-    
+
     events.forEach((event) => {
       window.addEventListener(event, resetTimeout);
     });

@@ -9,7 +9,7 @@ import {
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 export interface MenuItemData {
-    id: number;
+    id: string | number; // Support both API (string) and legacy (number)
     name: string;
     category: string;
     price: number;

@@ -2,6 +2,7 @@
 
 import StatsCard from '@/components/ui/StatsCard';
 import QuickActionCard from './components/QuickActionCard';
+import MenuStatsSection from './components/MenuStatsSection';
 import { dashboardStats, quickActions } from './mockData';
 import PageHeader from '@/components/ui/PageHeader';
 import { useRestaurantStore } from '@/stores/restaurantStore';
@@ -33,6 +34,9 @@ export default function DashboardPage() {
           />
         ))}
       </div>
+
+      {/* Menu Stats Section */}
+      <MenuStatsSection />
 
       {/* Chart Section */}
       <div className="relative bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl border border-purple-500/20 rounded-3xl p-8 overflow-hidden mb-10">
