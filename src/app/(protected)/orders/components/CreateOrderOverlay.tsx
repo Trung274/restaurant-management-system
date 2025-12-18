@@ -14,6 +14,7 @@ interface OrderItem {
     name: string;
     quantity: number;
     price: number;
+    note: string;
 }
 
 interface CreateOrderOverlayProps {
@@ -26,7 +27,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
     const [customer, setCustomer] = useState('');
     const [table, setTable] = useState('');
     const [orderItems, setOrderItems] = useState<OrderItem[]>([
-        { id: '1', menuItemId: '' as const, name: '', quantity: 1, price: 0 }
+        { id: '1', menuItemId: '' as const, name: '', quantity: 1, price: 0, note: '' }
     ]);
     const [selectedCategory, setSelectedCategory] = useState('Tất cả');
 
@@ -53,14 +54,14 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
         if (!isOpen) {
             setCustomer('');
             setTable('');
-            setOrderItems([{ id: '1', menuItemId: '' as const, name: '', quantity: 1, price: 0 }]);
+            setOrderItems([{ id: '1', menuItemId: '' as const, name: '', quantity: 1, price: 0, note: '' }]);
             setSelectedCategory('Tất cả');
         }
     }, [isOpen]);
 
     const addOrderItem = () => {
         const newId = (orderItems.length + 1).toString();
-        setOrderItems([...orderItems, { id: newId, menuItemId: '' as const, name: '', quantity: 1, price: 0 }]);
+        setOrderItems([...orderItems, { id: newId, menuItemId: '' as const, name: '', quantity: 1, price: 0, note: '' }]);
     };
 
     const removeOrderItem = (id: string) => {
@@ -249,9 +250,9 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                         key={item.id}
                                         className="relative bg-white/5 border border-white/10 rounded-xl p-4 hover:bg-white/10 transition-all"
                                     >
-                                        <div className="grid grid-cols-12 gap-3 items-center">
+                                        <div className="grid grid-cols-12 gap-3 items-start">
                                             {/* Menu Item Selection */}
-                                            <div className="col-span-12 md:col-span-6">
+                                            <div className="col-span-12 md:col-span-5">
                                                 <label className="block text-xs font-medium text-gray-400 mb-1">
                                                     Chọn món <span className="text-red-400">*</span>
                                                 </label>
@@ -271,6 +272,11 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                                         </option>
                                                     ))}
                                                 </select>
+                                                {selectedMenuItem?.popular && (
+                                                    <div className="mt-1">
+                                                        <span className="text-[10px] px-2 py-0.5 bg-orange-500/20 text-orange-400 rounded-full">⭐ Món phổ biến</span>
+                                                    </div>
+                                                )}
                                             </div>
 
                                             {/* Quantity */}
@@ -288,7 +294,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                             </div>
 
                                             {/* Price (Read-only) */}
-                                            <div className="col-span-6 md:col-span-3">
+                                            <div className="col-span-6 md:col-span-2">
                                                 <label className="block text-xs font-medium text-gray-400 mb-1">
                                                     Đơn giá
                                                 </label>
@@ -297,8 +303,22 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                                 </div>
                                             </div>
 
+                                            {/* Note Input */}
+                                            <div className="col-span-12 md:col-span-2">
+                                                <label className="block text-xs font-medium text-gray-400 mb-1">
+                                                    Ghi chú
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={item.note || ''}
+                                                    onChange={(e) => updateOrderItem(item.id, 'note', e.target.value)}
+                                                    placeholder="VD: Ít cay..."
+                                                    className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm placeholder-gray-600"
+                                                />
+                                            </div>
+
                                             {/* Remove Button */}
-                                            <div className="col-span-12 md:col-span-1 flex justify-end md:justify-center">
+                                            <div className="col-span-12 md:col-span-1 flex justify-end md:justify-center pt-6 md:pt-0">
                                                 <button
                                                     type="button"
                                                     onClick={() => removeOrderItem(item.id)}
@@ -316,11 +336,8 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                         {/* Subtotal */}
                                         {item.menuItemId && item.price > 0 && (
                                             <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-sm text-gray-300">{item.name}</span>
-                                                    {selectedMenuItem?.popular && (
-                                                        <span className="text-xs px-2 py-0.5 bg-orange-500/20 text-orange-400 rounded-full">⭐ Popular</span>
-                                                    )}
+                                                <div className="text-xs text-gray-500 italic">
+                                                    {item.note && `Ghi chú: ${item.note}`}
                                                 </div>
                                                 <p className="text-sm text-gray-400">
                                                     Thành tiền: <span className="text-blue-400 font-semibold text-base">
