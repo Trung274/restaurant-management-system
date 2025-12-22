@@ -82,21 +82,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {quickActions.map((action) => (
-          <QuickActionCard
-            key={action.id}
-            title={action.title}
-            description={action.description}
-            emoji={action.emoji}
-            gradientFrom={action.gradientFrom}
-            gradientTo={action.gradientTo}
-            onClick={() => console.log(`Clicked: ${action.title}`)}
-          />
-        ))}
-      </div>
     </div>
   );
 }

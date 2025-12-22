@@ -23,6 +23,7 @@ import {
 } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/ui/PageHeader';
 import { GeneralSettingsSection } from './components/GeneralSettingsSection';
+import { SecuritySettingsSection } from './components/SecuritySettingsSection';
 
 export default function SettingsPage() {
   const [selectedSection, setSelectedSection] = useState('general');
@@ -167,85 +168,7 @@ export default function SettingsPage() {
         );
 
       case 'security':
-        return (
-          <div className="space-y-6">
-            <div className="p-6 bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/20 rounded-2xl">
-              <h3 className="text-lg font-bold text-white mb-4">Đổi mật khẩu</h3>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Mật khẩu hiện tại
-                  </label>
-                  <input
-                    type="password"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Mật khẩu mới
-                  </label>
-                  <input
-                    type="password"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50 transition-all"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Xác nhận mật khẩu mới
-                  </label>
-                  <input
-                    type="password"
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50 transition-all"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-2xl">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-white mb-1">Xác thực hai yếu tố (2FA)</h3>
-                  <p className="text-sm text-gray-400">Tăng cường bảo mật cho tài khoản</p>
-                </div>
-                <div className="relative">
-                  <input type="checkbox" className="sr-only peer" />
-                  <div className="w-14 h-7 bg-white/10 rounded-full peer-checked:bg-gradient-to-r peer-checked:from-blue-600 peer-checked:to-cyan-600 transition-all"></div>
-                  <div className="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7"></div>
-                </div>
-              </div>
-              <p className="text-sm text-gray-400">
-                Khi bật tính năng này, bạn sẽ cần nhập mã xác thực từ ứng dụng di động mỗi khi đăng nhập.
-              </p>
-            </div>
-
-            <div className="p-6 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-2xl">
-              <h3 className="text-lg font-bold text-white mb-4">Phiên đăng nhập</h3>
-              <div className="space-y-3">
-                {[
-                  { device: 'Chrome - Windows', location: 'Hà Nội, VN', time: 'Hiện tại', active: true },
-                  { device: 'Safari - iPhone', location: 'Hà Nội, VN', time: '2 giờ trước', active: false },
-                  { device: 'Firefox - MacOS', location: 'TP.HCM, VN', time: '1 ngày trước', active: false }
-                ].map((session, index) => (
-                  <div key={index} className="flex items-center justify-between p-4 bg-white/5 border border-white/10 rounded-xl">
-                    <div className="flex-1">
-                      <p className="text-white font-medium flex items-center gap-2">
-                        {session.device}
-                        {session.active && <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs rounded-full">Active</span>}
-                      </p>
-                      <p className="text-sm text-gray-400">{session.location} • {session.time}</p>
-                    </div>
-                    {!session.active && (
-                      <button className="text-red-400 hover:text-red-300 text-sm font-medium">
-                        Đăng xuất
-                      </button>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
+        return <SecuritySettingsSection />;
 
       case 'appearance':
         return (

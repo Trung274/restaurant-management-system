@@ -1,4 +1,4 @@
-import { 
+import {
   UserCircleIcon,
   BellIcon,
   ShieldCheckIcon,
@@ -6,7 +6,8 @@ import {
   CreditCardIcon,
   GlobeAltIcon,
   ServerIcon,
-  BuildingStorefrontIcon} from '@heroicons/react/24/outline';
+  BuildingStorefrontIcon
+} from '@heroicons/react/24/outline';
 
 export const settingsSections = [
   {
@@ -30,16 +31,6 @@ export const settingsSections = [
     emoji: '👤'
   },
   {
-    id: 'notifications',
-    name: 'Thông báo',
-    description: 'Cấu hình thông báo và cảnh báo',
-    icon: BellIcon,
-    gradient: 'from-orange-500 to-amber-500',
-    bg: 'from-orange-500/10 to-amber-500/10',
-    border: 'border-orange-500/20',
-    emoji: '🔔'
-  },
-  {
     id: 'security',
     name: 'Bảo mật',
     description: 'Mật khẩu và xác thực hai yếu tố',
@@ -48,6 +39,16 @@ export const settingsSections = [
     bg: 'from-green-500/10 to-emerald-500/10',
     border: 'border-green-500/20',
     emoji: '🔒'
+  },
+  {
+    id: 'notifications',
+    name: 'Thông báo',
+    description: 'Cấu hình thông báo và cảnh báo',
+    icon: BellIcon,
+    gradient: 'from-orange-500 to-amber-500',
+    bg: 'from-orange-500/10 to-amber-500/10',
+    border: 'border-orange-500/20',
+    emoji: '🔔'
   },
   {
     id: 'appearance',
