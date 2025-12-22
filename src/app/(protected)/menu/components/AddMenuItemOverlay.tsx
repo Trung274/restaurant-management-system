@@ -344,7 +344,7 @@ export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem
                                             alt={formData.name}
                                             className="w-24 h-24 rounded-lg object-cover"
                                             onError={(e) => {
-                                                (e.target as HTMLImageElement).src = 'https://via.placeholder.com/96?text=No+Image';
+                                                (e.target as HTMLImageElement).src = '/default-fallback-image.png';
                                             }}
                                         />
                                     )}

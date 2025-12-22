@@ -46,6 +46,9 @@ export default function MenuItem({ item, onEdit, onDelete }: MenuItemProps) {
                     src={item.image}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/default-fallback-image.png';
+                    }}
                 />
 
                 {/* Badges */}

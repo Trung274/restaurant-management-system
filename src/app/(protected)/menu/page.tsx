@@ -276,6 +276,9 @@ export default function MenuPage() {
                       src={item.image}
                       alt={item.name}
                       className="w-20 h-20 rounded-lg object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/default-fallback-image.png';
+                      }}
                     />
                   </div>
                   <div className="flex-1">
