@@ -21,10 +21,12 @@ export default function Header({ onMenuClick }: HeaderProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isLoggingOut, setIsLoggingOut] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     // Close dropdown when clicking outside
     useEffect(() => {
+        setIsMounted(true);
         const handleClickOutside = (event: MouseEvent) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
                 setIsDropdownOpen(false);
@@ -46,10 +48,10 @@ export default function Header({ onMenuClick }: HeaderProps) {
         }
     };
 
-    // Get user display name with fallback
-    const displayName = user?.name || (authLoading ? '' : 'User');
-    const displayEmail = user?.email || '';
-    const userInitial = user?.name?.charAt(0).toUpperCase() || 'U';
+    // Get user display name with fallback - only show user data after mount to prevent hydration mismatch
+    const displayName = (isMounted && user?.name) || (authLoading ? '' : 'User');
+    const displayEmail = (isMounted && user?.email) || '';
+    const userInitial = (isMounted && user?.name?.charAt(0).toUpperCase()) || 'U';
 
     return (
         <header className="bg-gradient-to-r from-gray-900/95 to-slate-800/95 backdrop-blur-xl border-b border-white/10 sticky top-0 z-40">
