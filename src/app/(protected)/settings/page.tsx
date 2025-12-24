@@ -24,6 +24,7 @@ import {
 import PageHeader from '@/components/ui/PageHeader';
 import { GeneralSettingsSection } from './components/GeneralSettingsSection';
 import { SecuritySettingsSection } from './components/SecuritySettingsSection';
+import { ProfileSettingsSection } from './components/ProfileSettingsSection';
 
 export default function SettingsPage() {
   const [selectedSection, setSelectedSection] = useState('general');
@@ -35,84 +36,7 @@ export default function SettingsPage() {
         return <GeneralSettingsSection gradient={selectedConfig?.gradient} />;
 
       case 'profile':
-        return (
-          <div className="space-y-6">
-            <div className="flex items-center gap-6 mb-8">
-              <div className="relative">
-                <img
-                  src="https://i.pravatar.cc/120"
-                  alt="Avatar"
-                  className="w-24 h-24 rounded-full border-4 border-purple-500/30"
-                />
-                <button className="absolute bottom-0 right-0 p-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white hover:shadow-lg transition-all">
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                </button>
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-1">Admin User</h3>
-                <p className="text-gray-400 text-sm">Quản trị viên hệ thống</p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Họ và tên
-                </label>
-                <input
-                  type="text"
-                  defaultValue="Admin User"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 transition-all"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Chức vụ
-                </label>
-                <input
-                  type="text"
-                  defaultValue="Quản trị viên"
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 transition-all"
-                />
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                defaultValue="admin@restaurant.com"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 transition-all"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Số điện thoại
-              </label>
-              <input
-                type="tel"
-                defaultValue="0901234567"
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 transition-all"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Bio
-              </label>
-              <textarea
-                rows={3}
-                defaultValue="Quản lý nhà hàng với hơn 10 năm kinh nghiệm trong ngành F&B."
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-500/50 transition-all resize-none"
-              />
-            </div>
-          </div>
-        );
+        return <ProfileSettingsSection />;
 
       case 'notifications':
         return (

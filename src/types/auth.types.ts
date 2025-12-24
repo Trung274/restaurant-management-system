@@ -2,6 +2,9 @@ export interface User {
   _id: string;
   name: string;
   email: string;
+  phone?: string;
+  bio?: string;
+  avatar?: string;
   role: {
     _id: string;
     name: string;
@@ -73,4 +76,20 @@ export interface ChangePasswordPayload {
 export interface ChangePasswordResponse {
   success: boolean;
   message: string;
+}
+
+export interface UpdateUserProfilePayload {
+  name?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  avatar?: string;
+}
+
+export interface UpdateUserProfileResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+  };
 }
