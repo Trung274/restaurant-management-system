@@ -72,7 +72,15 @@ export default function LoginPage() {
   if (isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 flex items-center justify-center">
-        <div className="text-white text-lg">Đang chuyển hướng...</div>
+        <div className="flex flex-col items-center gap-6">
+          {/* Placeholder for animated GIF - replace src with your GIF path */}
+          <img
+            src="/waiting.gif"
+            alt="Loading..."
+            className="w-32 h-32 object-contain"
+          />
+          <div className="text-white text-lg">Đang chuyển hướng...</div>
+        </div>
       </div>
     );
   }
