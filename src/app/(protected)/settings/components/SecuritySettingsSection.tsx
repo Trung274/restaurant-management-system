@@ -1,25 +1,95 @@
 import { useState } from 'react';
-import { CheckIcon } from '@heroicons/react/24/outline'; // Make sure CheckIcon is imported
+import { CheckIcon } from '@heroicons/react/24/outline';
+import { changePassword } from '@/lib/userService';
+import { toast } from '@/utils/toast';
 
 export const SecuritySettingsSection = () => {
     const [is2FAEnabled, setIs2FAEnabled] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
 
-    const handleSave = () => {
+    // Password form state
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [validationErrors, setValidationErrors] = useState<{
+        currentPassword?: string;
+        newPassword?: string;
+        confirmPassword?: string;
+    }>({});
+
+    const validatePasswordForm = (): boolean => {
+        const errors: typeof validationErrors = {};
+
+        if (!currentPassword) {
+            errors.currentPassword = 'Vui lòng nhập mật khẩu hiện tại';
+        }
+
+        if (!newPassword) {
+            errors.newPassword = 'Vui lòng nhập mật khẩu mới';
+        } else if (newPassword.length < 6) {
+            errors.newPassword = 'Mật khẩu mới phải có ít nhất 6 ký tự';
+        } else if (newPassword === currentPassword) {
+            errors.newPassword = 'Mật khẩu mới phải khác mật khẩu hiện tại';
+        }
+
+        if (!confirmPassword) {
+            errors.confirmPassword = 'Vui lòng xác nhận mật khẩu mới';
+        } else if (confirmPassword !== newPassword) {
+            errors.confirmPassword = 'Mật khẩu xác nhận không khớp';
+        }
+
+        setValidationErrors(errors);
+        return Object.keys(errors).length === 0;
+    };
+
+    const handleSave = async () => {
+        // Clear previous validation errors
+        setValidationErrors({});
+
+        // Validate form
+        if (!validatePasswordForm()) {
+            toast.error('Vui lòng kiểm tra lại thông tin');
+            return;
+        }
+
         setSaveStatus('saving');
-        // Simulate API call
-        setTimeout(() => {
+
+        try {
+            const response = await changePassword({
+                currentPassword,
+                newPassword,
+            });
+
             setSaveStatus('saved');
-            setIsEditing(false);
-            setTimeout(() => setSaveStatus('idle'), 2000);
-        }, 1000);
+            toast.success(response.message || 'Đổi mật khẩu thành công!');
+
+            // Clear password fields
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmPassword('');
+            setValidationErrors({});
+
+            // Exit edit mode after a short delay
+            setTimeout(() => {
+                setIsEditing(false);
+                setSaveStatus('idle');
+            }, 2000);
+        } catch (error: any) {
+            setSaveStatus('idle');
+            const errorMessage = error.response?.data?.error || error.response?.data?.message || 'Đổi mật khẩu thất bại';
+            toast.error(errorMessage);
+        }
     };
 
     const handleCancel = () => {
         setIsEditing(false);
         setSaveStatus('idle');
-        // Reset logic would go here
+        // Clear password fields
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
+        setValidationErrors({});
     };
 
     return (
@@ -94,9 +164,14 @@ export const SecuritySettingsSection = () => {
                         </label>
                         <input
                             type="password"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
                             disabled={!isEditing}
                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         />
+                        {validationErrors.currentPassword && (
+                            <p className="text-red-400 text-sm mt-1">{validationErrors.currentPassword}</p>
+                        )}
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -104,9 +179,14 @@ export const SecuritySettingsSection = () => {
                         </label>
                         <input
                             type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
                             disabled={!isEditing}
                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         />
+                        {validationErrors.newPassword && (
+                            <p className="text-red-400 text-sm mt-1">{validationErrors.newPassword}</p>
+                        )}
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -114,9 +194,14 @@ export const SecuritySettingsSection = () => {
                         </label>
                         <input
                             type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                             disabled={!isEditing}
                             className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-green-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                         />
+                        {validationErrors.confirmPassword && (
+                            <p className="text-red-400 text-sm mt-1">{validationErrors.confirmPassword}</p>
+                        )}
                     </div>
                 </div>
             </div>
@@ -172,3 +257,4 @@ export const SecuritySettingsSection = () => {
         </div>
     );
 };
+
