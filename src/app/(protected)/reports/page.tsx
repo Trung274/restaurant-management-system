@@ -150,8 +150,8 @@ export default function ReportsPage() {
           <button
             onClick={() => setSelectedType('all')}
             className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 ${selectedType === 'all'
-                ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30'
-                : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
+              ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-lg shadow-indigo-500/30'
+              : 'bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-white'
               }`}
           >
             Tất cả
@@ -161,8 +161,8 @@ export default function ReportsPage() {
               key={type.id}
               onClick={() => setSelectedType(type.id)}
               className={`px-6 py-2.5 rounded-xl font-medium transition-all duration-300 flex items-center gap-2 ${selectedType === type.id
-                  ? `bg-gradient-to-r ${type.gradient} text-white shadow-lg`
-                  : `bg-gradient-to-r ${type.bg} border ${type.border} text-gray-400 hover:scale-105`
+                ? `bg-gradient-to-r ${type.gradient} text-white shadow-lg`
+                : `bg-gradient-to-r ${type.bg} border ${type.border} text-gray-400 hover:scale-105`
                 }`}
             >
               <span>{type.emoji}</span>
@@ -274,8 +274,8 @@ export default function ReportsPage() {
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="text-white font-semibold">{schedule.name}</h4>
                     <div className={`px-3 py-1 rounded-full text-xs font-medium ${schedule.active
-                        ? 'bg-green-500/20 text-green-400'
-                        : 'bg-gray-500/20 text-gray-400'
+                      ? 'bg-green-500/20 text-green-400'
+                      : 'bg-gray-500/20 text-gray-400'
                       }`}>
                       {schedule.active ? '✓ Hoạt động' : '⸺ Tạm dừng'}
                     </div>

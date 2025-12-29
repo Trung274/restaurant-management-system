@@ -1,144 +1,84 @@
-import { 
+import {
   ClockIcon,
   CheckCircleIcon,
-  XCircleIcon} from '@heroicons/react/24/outline';
+  XCircleIcon
+} from '@heroicons/react/24/outline';
 
 export const staffMembers = [
   {
     id: 1,
     name: 'Nguyễn Văn A',
     avatar: 'https://i.pravatar.cc/150?img=11',
-    role: 'Quản lý',
-    position: 'manager',
-    department: 'Quản lý',
-    email: 'nguyenvana@restaurant.com',
+    role: 'Quản trị viên',
+    position: 'admin',
+    department: 'Ban Giám Đốc',
+    email: 'admin@restaurant.com',
     phone: '0901234567',
     status: 'active',
-    shift: 'Sáng',
-    salary: 15000000,
+    shift: 'Hành chính',
     joinDate: '2022-01-15',
-    rating: 4.9,
-    tasksCompleted: 342,
-    performance: 'excellent'
+    rating: 5.0,
+    tasksCompleted: 1542
   },
   {
     id: 2,
     name: 'Trần Thị B',
     avatar: 'https://i.pravatar.cc/150?img=5',
-    role: 'Phục vụ',
-    position: 'waiter',
-    department: 'Phục vụ',
-    email: 'tranthib@restaurant.com',
+    role: 'Quản lý',
+    position: 'manager',
+    department: 'Quản lý',
+    email: 'manager@restaurant.com',
     phone: '0902345678',
     status: 'active',
-    shift: 'Chiều',
-    salary: 8000000,
+    shift: 'Sáng',
     joinDate: '2022-03-20',
-    rating: 4.7,
-    tasksCompleted: 456,
-    performance: 'good'
+    rating: 4.8,
+    tasksCompleted: 856
   },
   {
     id: 3,
     name: 'Lê Hoàng C',
     avatar: 'https://i.pravatar.cc/150?img=12',
-    role: 'Đầu bếp',
-    position: 'chef',
+    role: 'Vận hành',
+    position: 'operations',
     department: 'Bếp',
-    email: 'lehoangc@restaurant.com',
+    email: 'chef@restaurant.com',
     phone: '0903456789',
     status: 'active',
     shift: 'Sáng',
-    salary: 12000000,
     joinDate: '2021-06-10',
-    rating: 4.8,
-    tasksCompleted: 567,
-    performance: 'excellent'
+    rating: 4.7,
+    tasksCompleted: 567
   },
   {
     id: 4,
     name: 'Phạm Minh D',
     avatar: 'https://i.pravatar.cc/150?img=13',
-    role: 'Phục vụ',
-    position: 'waiter',
+    role: 'Vận hành',
+    position: 'operations',
     department: 'Phục vụ',
-    email: 'phamminhd@restaurant.com',
+    email: 'waiter@restaurant.com',
     phone: '0904567890',
-    status: 'active',
+    status: 'on_leave',
     shift: 'Tối',
-    salary: 8500000,
     joinDate: '2023-02-15',
-    rating: 4.6,
-    tasksCompleted: 234,
-    performance: 'good'
+    rating: 4.5,
+    tasksCompleted: 234
   },
   {
     id: 5,
     name: 'Hoàng Thu E',
     avatar: 'https://i.pravatar.cc/150?img=9',
-    role: 'Thu ngân',
-    position: 'cashier',
+    role: 'Kế toán',
+    position: 'accountant',
     department: 'Tài chính',
-    email: 'hoangthue@restaurant.com',
+    email: 'accountant@restaurant.com',
     phone: '0905678901',
-    status: 'on_leave',
-    shift: 'Chiều',
-    salary: 7500000,
+    status: 'active',
+    shift: 'Hành chính',
     joinDate: '2022-08-01',
-    rating: 4.5,
-    tasksCompleted: 312,
-    performance: 'average'
-  },
-  {
-    id: 6,
-    name: 'Võ Văn F',
-    avatar: 'https://i.pravatar.cc/150?img=14',
-    role: 'Đầu bếp phụ',
-    position: 'sous_chef',
-    department: 'Bếp',
-    email: 'vovanf@restaurant.com',
-    phone: '0906789012',
-    status: 'active',
-    shift: 'Chiều',
-    salary: 10000000,
-    joinDate: '2022-11-20',
-    rating: 4.7,
-    tasksCompleted: 423,
-    performance: 'good'
-  },
-  {
-    id: 7,
-    name: 'Đặng Thị G',
-    avatar: 'https://i.pravatar.cc/150?img=10',
-    role: 'Phục vụ',
-    position: 'waiter',
-    department: 'Phục vụ',
-    email: 'dangthig@restaurant.com',
-    phone: '0907890123',
-    status: 'inactive',
-    shift: 'Sáng',
-    salary: 7800000,
-    joinDate: '2023-05-10',
-    rating: 4.3,
-    tasksCompleted: 156,
-    performance: 'average'
-  },
-  {
-    id: 8,
-    name: 'Bùi Minh H',
-    avatar: 'https://i.pravatar.cc/150?img=15',
-    role: 'Bảo vệ',
-    position: 'security',
-    department: 'An ninh',
-    email: 'buiminhh@restaurant.com',
-    phone: '0908901234',
-    status: 'active',
-    shift: 'Tối',
-    salary: 6500000,
-    joinDate: '2021-12-01',
-    rating: 4.4,
-    tasksCompleted: 289,
-    performance: 'average'
+    rating: 4.9,
+    tasksCompleted: 312
   }
 ];
 
@@ -170,18 +110,10 @@ export const statusConfig = {
 };
 
 export const positionConfig = {
-  manager: { label: 'Quản lý', color: 'from-purple-500 to-pink-500', icon: '👔' },
-  chef: { label: 'Đầu bếp', color: 'from-red-500 to-orange-500', icon: '👨‍🍳' },
-  sous_chef: { label: 'Đầu bếp phụ', color: 'from-orange-500 to-amber-500', icon: '🍳' },
-  waiter: { label: 'Phục vụ', color: 'from-blue-500 to-cyan-500', icon: '🍽️' },
-  cashier: { label: 'Thu ngân', color: 'from-green-500 to-emerald-500', icon: '💰' },
-  security: { label: 'Bảo vệ', color: 'from-gray-500 to-slate-500', icon: '🛡️' }
-};
-
-export const performanceConfig = {
-  excellent: { label: 'Xuất sắc', color: 'text-green-400', bg: 'bg-green-500/20' },
-  good: { label: 'Tốt', color: 'text-blue-400', bg: 'bg-blue-500/20' },
-  average: { label: 'Trung bình', color: 'text-yellow-400', bg: 'bg-yellow-500/20' }
+  admin: { label: 'Quản trị viên', color: 'from-purple-500 to-pink-500', icon: '👑' },
+  manager: { label: 'Quản lý', color: 'from-blue-500 to-cyan-500', icon: '👔' },
+  operations: { label: 'Vận hành', color: 'from-orange-500 to-amber-500', icon: '⚙️' },
+  accountant: { label: 'Kế toán', color: 'from-green-500 to-emerald-500', icon: '💰' }
 };
 
 export const staffStats = [

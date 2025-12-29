@@ -216,7 +216,7 @@ export default function TablesPage() {
             return (
               <div
                 key={table.id}
-                className={`group relative bg-gradient-to-br ${config.bg} backdrop-blur-sm border ${config.border} rounded-2xl p-6 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden`}
+                className={`group relative bg-gradient-to-br ${config.bg} backdrop-blur-sm border ${config.border} rounded-2xl p-6 hover:scale-105 transition-all duration-300 overflow-hidden`}
               >
                 {/* Hover glow effect */}
                 <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
@@ -255,7 +255,7 @@ export default function TablesPage() {
                             e.stopPropagation();
                             setOpenMenuId(openMenuId === table.id ? null : table.id);
                           }}
-                          className="p-2 rounded-lg hover:bg-white/10 transition-all"
+                          className="p-2 rounded-lg hover:bg-white/10 transition-all cursor-pointer"
                         >
                           <EllipsisVerticalIcon className="w-5 h-5 text-gray-400 hover:text-white" />
                         </button>
@@ -378,7 +378,7 @@ export default function TablesPage() {
                     {table.status === 'available' && (
                       <button
                         onClick={() => handleTableAction(table, 'book')}
-                        className={`flex-1 py-2 rounded-lg bg-gradient-to-r ${config.gradient} text-white font-`}>
+                        className={`flex-1 py-2 rounded-lg bg-gradient-to-r ${config.gradient} text-white font- cursor-pointer`}>
                         Đặt bàn
                       </button>
                     )}
@@ -387,7 +387,7 @@ export default function TablesPage() {
 
                         <button
                           onClick={() => handleTableAction(table, 'payment')}
-                          className="flex-1 py-2 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 text-white font-medium hover:shadow-lg hover:shadow-red-500/50 transition-all">
+                          className="flex-1 py-2 rounded-lg bg-gradient-to-r from-red-600 to-rose-600 text-white font-medium hover:shadow-lg hover:shadow-red-500/50 transition-all cursor-pointer">
                           Thanh toán
                         </button>
                       </>
@@ -396,12 +396,12 @@ export default function TablesPage() {
                       <>
                         <button
                           onClick={() => handleTableAction(table, 'view')}
-                          className="flex-1 py-2 rounded-lg bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all">
+                          className="flex-1 py-2 rounded-lg bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all cursor-pointer">
                           Chi tiết
                         </button>
                         <button
                           onClick={() => handleTableAction(table, 'check-in')}
-                          className={`flex-1 py-2 rounded-lg bg-gradient-to-r ${config.gradient} text-white font-medium hover:shadow-lg transition-all`}>
+                          className={`flex-1 py-2 rounded-lg bg-gradient-to-r ${config.gradient} text-white font-medium hover:shadow-lg transition-all cursor-pointer`}>
                           Check-in
                         </button>
                       </>
@@ -409,7 +409,7 @@ export default function TablesPage() {
                     {table.status === 'cleaning' && (
                       <button
                         onClick={() => handleTableAction(table, 'finish')}
-                        className={`flex-1 py-2 rounded-lg bg-gradient-to-r ${config.gradient} text-white font-medium hover:shadow-lg transition-all`}>
+                        className={`flex-1 py-2 rounded-lg bg-gradient-to-r ${config.gradient} text-white font-medium hover:shadow-lg transition-all cursor-pointer`}>
                         Hoàn tất
                       </button>
                     )}

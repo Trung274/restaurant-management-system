@@ -43,7 +43,7 @@ export default function DashboardPage() {
       <TableStatsSection />
 
       {/* Chart Section */}
-      <div className="relative bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl border border-purple-500/20 rounded-3xl p-8 overflow-hidden mb-10">
+      {/* <div className="relative bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl border border-purple-500/20 rounded-3xl p-8 overflow-hidden mb-10">
         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent"></div>
 
         <div className="relative">
@@ -81,7 +81,7 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
