@@ -17,6 +17,7 @@ import AddStaffOverlay from './components/AddStaffOverlay';
 import EditStaffOverlay from './components/EditStaffOverlay';
 import ConfirmDeleteOverlay from '@/components/forms/ConfirmDeleteOverlay';
 import { useAuth } from '@/hooks/useAuth';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function StaffPage() {
   const router = useRouter();
@@ -186,11 +187,7 @@ export default function StaffPage() {
   });
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
-      </div>
-    );
+    return <LoadingSpinner fullScreen />;
   }
 
   return (

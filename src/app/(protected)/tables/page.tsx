@@ -20,6 +20,7 @@ import TableStatusOverlay from './components/TableStatusOverlay';
 import ConfirmActionOverlay from '@/components/forms/ConfirmActionOverlay';
 import { toast } from '@/utils/toast';
 import { useTablesStore } from '@/stores/tablesStore';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function TablesPage() {
   const router = useRouter();
@@ -200,10 +201,7 @@ export default function TablesPage() {
 
       {/* Loading State */}
       {isLoading && tables.length === 0 && (
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
-          <p className="text-gray-400 mt-4">Đang tải dữ liệu...</p>
-        </div>
+        <LoadingSpinner message="Đang tải dữ liệu..." />
       )}
 
       {/* Tables Grid */}
