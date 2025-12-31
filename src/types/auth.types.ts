@@ -5,6 +5,8 @@ export interface User {
   phone?: string;
   bio?: string;
   avatar?: string;
+  shift?: string;
+  workStatus?: 'active' | 'on_leave' | 'inactive';
   role: {
     _id: string;
     name: string;
@@ -84,6 +86,9 @@ export interface UpdateUserProfilePayload {
   phone?: string;
   bio?: string;
   avatar?: string;
+  shift?: string;
+  workStatus?: 'active' | 'on_leave' | 'inactive';
+  isActive?: boolean;
 }
 
 export interface UpdateUserProfileResponse {
@@ -91,5 +96,36 @@ export interface UpdateUserProfileResponse {
   message: string;
   data: {
     user: User;
+  };
+}
+
+export interface CreateUserPayload {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  roleName: string;
+  shift?: string;
+  workStatus?: 'active' | 'on_leave' | 'inactive';
+  isActive: boolean;
+}
+
+export interface CreateUserResponse {
+  success: boolean;
+  message: string;
+  data: {
+    user: User;
+  };
+}
+
+export interface UserStatsResponse {
+  success: boolean;
+  data: {
+    total: number;
+    active: number;
+    inactive: number;
+    byRole: Array<{ role: string; count: number }>;
+    byWorkStatus: Array<{ status: string; count: number }>;
+    byShift: Array<{ shift: string; count: number }>;
   };
 }

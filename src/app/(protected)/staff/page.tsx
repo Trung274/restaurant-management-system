@@ -1,61 +1,197 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import StatsCard from '@/components/ui/StatsCard';
-import { staffMembers, staffStats, statusConfig, positionConfig } from './mockData';
+import { staffStats, statusConfig, positionConfig } from './mockData';
 import {
-  MagnifyingGlassIcon,
   PlusIcon,
-  PencilSquareIcon,
-  TrashIcon,
-  EnvelopeIcon,
-  PhoneIcon,
-  ClockIcon,
-  StarIcon
 } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/ui/PageHeader';
 import SearchBar from '@/components/ui/SearchBar';
+import { getAllUsers, getUserStats, createUser, deleteUser, updateUserProfile } from '@/lib/userService';
+import { User, UserStatsResponse, CreateUserPayload, UpdateUserProfilePayload } from '@/types/auth.types';
+import { toast } from '@/utils/toast';
+import StaffCard from './components/StaffCard';
+import AddStaffOverlay from './components/AddStaffOverlay';
+import EditStaffOverlay from './components/EditStaffOverlay';
+import ConfirmDeleteOverlay from '@/components/forms/ConfirmDeleteOverlay';
+import { useAuth } from '@/hooks/useAuth';
 
 export default function StaffPage() {
+  const router = useRouter();
+  const { user: currentUser } = useAuth();
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [selectedPosition, setSelectedPosition] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [staffList, setStaffList] = useState<User[]>([]);
+  const [stats, setStats] = useState<UserStatsResponse['data'] | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Calculate dynamic stats
-  const calculatedStats = useMemo(() => {
-    const totalStaff = staffMembers.length;
-    const activeStaff = staffMembers.filter(s => s.status === 'active').length;
-    const onLeaveStaff = staffMembers.filter(s => s.status === 'on_leave').length;
-    const inactiveStaff = staffMembers.filter(s => s.status === 'inactive').length;
+  // Create state
+  const [isAddOverlayOpen, setIsAddOverlayOpen] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+
+  // Edit state
+  const [isEditOverlayOpen, setIsEditOverlayOpen] = useState(false);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Delete state
+  const [isDeleteOverlayOpen, setIsDeleteOverlayOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<{ id: string, name: string } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // Fetch staff data and stats
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const [usersResponse, statsResponse] = await Promise.all([
+        getAllUsers(),
+        getUserStats()
+      ]);
+
+      if (usersResponse.success && usersResponse.data) {
+        setStaffList(usersResponse.data);
+      }
+      if (statsResponse.success && statsResponse.data) {
+        setStats(statsResponse.data);
+      }
+    } catch (error: any) {
+      console.error('Failed to fetch data:', error);
+      if (error?.response?.data?.error?.includes('not authorized') || error?.message?.includes('not authorized')) {
+        router.push('/unauthorized');
+        return;
+      }
+      toast.error('Không thể tải dữ liệu');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const handleCreateUser = async (payload: CreateUserPayload) => {
+    try {
+      setIsCreating(true);
+      const response = await createUser(payload);
+
+      if (response.success) {
+        toast.success(response.message || 'Thêm nhân viên thành công');
+        setIsAddOverlayOpen(false);
+        fetchData(); // Refresh data
+      }
+    } catch (error: any) {
+      console.error('Failed to create user:', error);
+      toast.error(error.response?.data?.message || 'Không thể tạo nhân viên');
+    } finally {
+      setIsCreating(false);
+    }
+  };
+
+  const handleEditUser = async (id: string, payload: UpdateUserProfilePayload) => {
+    try {
+      setIsEditing(true);
+      const response = await updateUserProfile(id, payload);
+
+      if (response.success) {
+        toast.success(response.message || 'Cập nhật thành công');
+        setIsEditOverlayOpen(false);
+        setUserToEdit(null);
+        fetchData(); // Refresh data
+      }
+    } catch (error: any) {
+      console.error('Failed to update user:', error);
+      toast.error(error.response?.data?.message || 'Không thể cập nhật thông tin');
+    } finally {
+      setIsEditing(false);
+    }
+  };
+
+  const openEditOverlay = (staff: User) => {
+    setUserToEdit(staff);
+    setIsEditOverlayOpen(true);
+  };
+
+  const confirmDeleteUser = (id: string, name: string) => {
+    setUserToDelete({ id, name });
+    setIsDeleteOverlayOpen(true);
+  };
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      await deleteUser(userToDelete.id);
+      toast.success('Đã xóa nhân viên thành công');
+      setIsDeleteOverlayOpen(false);
+      setUserToDelete(null);
+      fetchData(); // Refresh data
+    } catch (error: any) {
+      console.error('Failed to delete user:', error);
+      toast.error(error.response?.data?.message || 'Không thể xóa nhân viên');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  // Map stats to display format
+  const displayStats = useMemo(() => {
+    if (!stats) return staffStats;
 
     return staffStats.map(stat => {
       let value = stat.value;
       switch (stat.id) {
         case 'total':
-          value = totalStaff;
+          value = stats.total;
           break;
         case 'active':
-          value = activeStaff;
+          const activeCount = stats.byWorkStatus.find(s => s.status === 'active')?.count || 0;
+          value = activeCount;
           break;
         case 'on_leave':
-          value = onLeaveStaff;
+          const onLeaveCount = stats.byWorkStatus.find(s => s.status === 'on_leave')?.count || 0;
+          value = onLeaveCount;
           break;
         case 'inactive':
-          value = inactiveStaff;
+          const inactiveCount = stats.byWorkStatus.find(s => s.status === 'inactive')?.count || 0;
+          value = inactiveCount;
           break;
       }
       return { ...stat, value };
     });
-  }, []);
+  }, [stats]);
 
-  const filteredStaff = staffMembers.filter(staff => {
-    const statusMatch = selectedStatus === 'all' || staff.status === selectedStatus;
-    const positionMatch = selectedPosition === 'all' || staff.position === selectedPosition;
-    const searchMatch = staff.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      staff.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      staff.department.toLowerCase().includes(searchQuery.toLowerCase());
+  const filteredStaff = staffList.filter(staff => {
+    // Map backend status to frontend status keys
+    let currentStatus = 'active';
+    if (staff.workStatus) {
+      currentStatus = staff.workStatus;
+    } else {
+      currentStatus = staff.isActive ? 'active' : 'inactive';
+    }
+
+    const statusMatch = selectedStatus === 'all' || currentStatus === selectedStatus;
+    const positionMatch = selectedPosition === 'all' || staff.role?.name === selectedPosition;
+
+    // Safety checks for searching
+    const nameMatch = staff.name?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
+    const emailMatch = staff.email?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
+    const searchMatch = nameMatch || emailMatch;
+
     return statusMatch && positionMatch && searchMatch;
   });
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
@@ -70,7 +206,7 @@ export default function StaffPage() {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        {calculatedStats.map((stat) => (
+        {displayStats.map((stat) => (
           <StatsCard
             key={stat.id}
             label={stat.label}
@@ -88,12 +224,15 @@ export default function StaffPage() {
         <SearchBar
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder="Tìm kiếm nhân viên theo tên, email, bộ phận..."
+          placeholder="Tìm kiếm nhân viên theo tên, email..."
           theme="sky"
         />
 
         {/* Add Staff Button */}
-        <button className="group relative px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer">
+        <button
+          onClick={() => setIsAddOverlayOpen(true)}
+          className="group relative px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all duration-300 hover:scale-105 flex items-center gap-2 cursor-pointer"
+        >
           <PlusIcon className="w-5 h-5" />
           <span>Thêm nhân viên</span>
         </button>
@@ -147,90 +286,14 @@ export default function StaffPage() {
 
       {/* Staff Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredStaff.map((staff) => {
-          const statusInfo = statusConfig[staff.status as keyof typeof statusConfig];
-          const positionInfo = positionConfig[staff.position as keyof typeof positionConfig];
-          const StatusIcon = statusInfo.icon;
-
-          return (
-            <div
-              key={staff.id}
-              className={`group relative bg-gradient-to-br ${statusInfo.bg} backdrop-blur-sm border ${statusInfo.border} rounded-2xl p-6 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden`}
-            >
-              {/* Hover glow effect */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"></div>
-
-              <div className="relative">
-                {/* Avatar & Status */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="relative">
-                    <div className={`absolute inset-0 bg-gradient-to-r ${statusInfo.gradient} rounded-full blur opacity-30`}></div>
-                    <img
-                      src={staff.avatar}
-                      alt={staff.name}
-                      className="relative w-16 h-16 rounded-full border-2 border-white/20"
-                    />
-                    {/* Online status */}
-                    {staff.status === 'active' && (
-                      <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-900"></div>
-                    )}
-                  </div>
-
-                  <div className={`p-2 rounded-lg bg-gradient-to-r ${statusInfo.bg} border ${statusInfo.border}`}>
-                    <StatusIcon className={`w-5 h-5 ${statusInfo.text}`} />
-                  </div>
-                </div>
-
-                {/* Name & Role */}
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold text-white mb-1">
-                    {staff.name}
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <span className={`inline-block px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${positionInfo.color} text-white`}>
-                      {positionInfo.icon} {positionInfo.label}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Status Badge */}
-                <div className="mb-4">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-gradient-to-r ${statusInfo.gradient} text-white`}>
-                    <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></span>
-                    {statusInfo.label}
-                  </span>
-                </div>
-
-                {/* Info */}
-                <div className="space-y-2 mb-4">
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <EnvelopeIcon className="w-4 h-4" />
-                    <span className="truncate">{staff.email}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <PhoneIcon className="w-4 h-4" />
-                    <span>{staff.phone}</span>
-                  </div>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <ClockIcon className="w-4 h-4" />
-                    <span>Ca {staff.shift}</span>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-2">
-                  <button className="flex-1 py-2 rounded-lg bg-white/5 border border-white/10 text-white font-medium hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                    <PencilSquareIcon className="w-4 h-4" />
-                    Sửa
-                  </button>
-                  <button className="p-2 rounded-lg bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 hover:text-red-400 hover:border-red-500/30 transition-all">
-                    <TrashIcon className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })}
+        {filteredStaff.map((staff) => (
+          <StaffCard
+            key={staff._id}
+            staff={staff}
+            onDelete={confirmDeleteUser}
+            onEdit={openEditOverlay}
+          />
+        ))}
       </div>
 
       {/* Empty State */}
@@ -255,6 +318,34 @@ export default function StaffPage() {
           </button>
         </div>
       )}
+
+      {/* Add Staff Overlay */}
+      <AddStaffOverlay
+        isOpen={isAddOverlayOpen}
+        onClose={() => setIsAddOverlayOpen(false)}
+        onSubmit={handleCreateUser}
+        isLoading={isCreating}
+      />
+
+      {/* Edit Staff Overlay */}
+      <EditStaffOverlay
+        isOpen={isEditOverlayOpen}
+        onClose={() => setIsEditOverlayOpen(false)}
+        onSubmit={handleEditUser}
+        currentUser={currentUser}
+        targetUser={userToEdit}
+        isLoading={isEditing}
+      />
+
+      {/* Delete Confirmation Overlay */}
+      <ConfirmDeleteOverlay
+        isOpen={isDeleteOverlayOpen}
+        onClose={() => setIsDeleteOverlayOpen(false)}
+        onConfirm={handleDeleteUser}
+        title="Xóa nhân viên"
+        itemName={userToDelete?.name}
+        isLoading={isDeleting}
+      />
     </div>
   );
 }
