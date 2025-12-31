@@ -9,7 +9,6 @@ import {
     TrashIcon,
     EnvelopeIcon,
     PhoneIcon,
-    MapPinIcon,
     StarIcon,
     HeartIcon,
     GiftIcon,
@@ -176,34 +175,28 @@ export default function CustomersPage() {
                                         <PhoneIcon className="w-4 h-4 flex-shrink-0" />
                                         <span>{customer.phone}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-sm text-gray-400">
-                                        <MapPinIcon className="w-4 h-4 flex-shrink-0" />
-                                        <span className="line-clamp-1">{customer.address}</span>
-                                    </div>
                                 </div>
 
-                                {/* Stats */}
-                                <div className="grid grid-cols-2 gap-2 mb-4">
-                                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                                        <p className="text-xs text-gray-400 mb-1">Điểm tích lũy</p>
-                                        <p className={`text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r ${membershipInfo.gradient}`}>
+                                {/* Stats Grid */}
+                                <div className="grid grid-cols-3 gap-2 mb-4">
+                                    <div className="p-2 rounded-lg bg-white/5 border border-white/10 text-center">
+                                        <p className="text-xs text-gray-400 mb-1">Điểm</p>
+                                        <p className={`text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r ${membershipInfo.gradient}`}>
                                             {customer.points}
                                         </p>
                                     </div>
-                                    <div className="p-3 rounded-lg bg-white/5 border border-white/10">
-                                        <p className="text-xs text-gray-400 mb-1">Đơn hàng</p>
-                                        <p className="text-lg font-bold text-white">
+                                    <div className="p-2 rounded-lg bg-white/5 border border-white/10 text-center">
+                                        <p className="text-xs text-gray-400 mb-1">Đơn</p>
+                                        <p className="text-sm font-bold text-white">
                                             {customer.totalOrders}
                                         </p>
                                     </div>
-                                </div>
-
-                                {/* Total Spent */}
-                                <div className="mb-4 p-3 rounded-lg bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20">
-                                    <p className="text-xs text-gray-400 mb-1">Tổng chi tiêu</p>
-                                    <p className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
-                                        {(customer.totalSpent / 1000000).toFixed(1)}M đ
-                                    </p>
+                                    <div className="p-2 rounded-lg bg-gradient-to-r from-green-500/10 to-emerald-500/10 border border-green-500/20 text-center">
+                                        <p className="text-xs text-gray-400 mb-1">Chi tiêu</p>
+                                        <p className="text-sm font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-400">
+                                            {(customer.totalSpent / 1000000).toFixed(1)}M
+                                        </p>
+                                    </div>
                                 </div>
 
                                 {/* Rating & Last Visit */}
@@ -214,25 +207,6 @@ export default function CustomersPage() {
                                     </div>
                                     <span className="text-gray-400">Ghé: {customer.lastVisit}</span>
                                 </div>
-
-                                {/* Preferences */}
-                                {customer.preferences.length > 0 && (
-                                    <div className="mb-4">
-                                        <p className="text-xs text-gray-400 mb-2">Món yêu thích:</p>
-                                        <div className="flex flex-wrap gap-1">
-                                            {customer.preferences.slice(0, 2).map((pref, index) => (
-                                                <span key={index} className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-gray-300">
-                                                    {pref}
-                                                </span>
-                                            ))}
-                                            {customer.preferences.length > 2 && (
-                                                <span className="px-2 py-1 bg-white/5 border border-white/10 rounded text-xs text-gray-300">
-                                                    +{customer.preferences.length - 2}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
 
                                 {/* Action Buttons */}
                                 <div className="flex gap-2">
