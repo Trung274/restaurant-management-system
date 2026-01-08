@@ -2,44 +2,57 @@
 
 import { useState, useEffect } from 'react';
 import { XMarkIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
-import { categories } from '../../menu/mockData';
-import { tables } from '../../tables/mockData';
-import { customers } from '../../customers/mockData';
 import { useMenuStore } from '@/stores/menuStore';
+import { useTablesStore } from '@/stores/tablesStore';
+import { useOrdersStore } from '@/stores/ordersStore';
 import { toast } from '@/utils/toast';
+import type { CreateOrderPayload } from '@/types/order.types';
 
 interface OrderItem {
     id: string;
-    menuItemId: string | '';
+    menuItemId: string;
     name: string;
     quantity: number;
     price: number;
-    note: string;
+    notes: string;
+
+    estimatedTime?: number;
+    priority: 'normal' | 'high' | 'urgent';
 }
 
 interface CreateOrderOverlayProps {
     isOpen: boolean;
     onClose: () => void;
-    onSubmit: (orderData: any) => void;
 }
 
-export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: CreateOrderOverlayProps) {
-    const [customer, setCustomer] = useState('');
-    const [table, setTable] = useState('');
+export default function CreateOrderOverlay({ isOpen, onClose }: CreateOrderOverlayProps) {
+    const [selectedTableId, setSelectedTableId] = useState('');
+    const [numberOfGuests, setNumberOfGuests] = useState(1);
+    const [orderNotes, setOrderNotes] = useState('');
     const [orderItems, setOrderItems] = useState<OrderItem[]>([
-        { id: '1', menuItemId: '' as const, name: '', quantity: 1, price: 0, note: '' }
+        { id: '1', menuItemId: '', name: '', quantity: 1, price: 0, notes: '', priority: 'normal' }
     ]);
     const [selectedCategory, setSelectedCategory] = useState('Tất cả');
 
-    // Get menu items from store
+    // Get data from stores
     const { items: menuItems, isLoading: isLoadingMenu, fetchMenuItems } = useMenuStore();
+    const { tables, fetchTables } = useTablesStore();
+    const { createOrder, isLoading: isCreatingOrder } = useOrdersStore();
 
-    // Fetch menu items when overlay opens (if not already loaded)
+    // Get unique categories from menu items
+    const categories = ['Tất cả', ...Array.from(new Set(menuItems.map(item => item.category)))];
+
+    // Fetch data when overlay opens
     useEffect(() => {
-        if (isOpen && menuItems.length === 0) {
-            fetchMenuItems({ status: 'available' });
+        if (isOpen) {
+            if (menuItems.length === 0) {
+                fetchMenuItems({ status: 'available' });
+            }
+            if (tables.length === 0) {
+                fetchTables();
+            }
         }
-    }, [isOpen, menuItems.length]);
+    }, [isOpen]);
 
     // Auto-calculate total
     const total = orderItems.reduce((sum, item) => sum + (item.quantity * item.price), 0);
@@ -49,19 +62,23 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
         ? menuItems
         : menuItems.filter(item => item.category === selectedCategory);
 
+    // Get OCCUPIED tables only
+    const occupiedTables = tables.filter(t => t.status === 'occupied');
+
     // Reset form when overlay closes
     useEffect(() => {
         if (!isOpen) {
-            setCustomer('');
-            setTable('');
-            setOrderItems([{ id: '1', menuItemId: '' as const, name: '', quantity: 1, price: 0, note: '' }]);
+            setSelectedTableId('');
+            setNumberOfGuests(1);
+            setOrderNotes('');
+            setOrderItems([{ id: '1', menuItemId: '', name: '', quantity: 1, price: 0, notes: '', priority: 'normal' }]);
             setSelectedCategory('Tất cả');
         }
     }, [isOpen]);
 
     const addOrderItem = () => {
         const newId = (orderItems.length + 1).toString();
-        setOrderItems([...orderItems, { id: newId, menuItemId: '' as const, name: '', quantity: 1, price: 0, note: '' }]);
+        setOrderItems([...orderItems, { id: newId, menuItemId: '', name: '', quantity: 1, price: 0, notes: '', priority: 'normal' }]);
     };
 
     const removeOrderItem = (id: string) => {
@@ -70,7 +87,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
         }
     };
 
-    const updateOrderItem = (id: string, field: keyof OrderItem, value: string | number) => {
+    const updateOrderItem = (id: string, field: keyof OrderItem, value: any) => {
         setOrderItems(orderItems.map(item =>
             item.id === id ? { ...item, [field]: value } : item
         ));
@@ -81,18 +98,30 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
         if (selectedMenuItem) {
             setOrderItems(orderItems.map(item =>
                 item.id === orderId
-                    ? { ...item, menuItemId, name: selectedMenuItem.name, price: selectedMenuItem.price }
+                    ? {
+                        ...item,
+                        menuItemId,
+                        name: selectedMenuItem.name,
+                        price: selectedMenuItem.price,
+
+                        estimatedTime: selectedMenuItem.estimatedTime
+                    }
                     : item
             ));
         }
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         // Validate form
-        if (!customer.trim() || !table.trim()) {
-            toast.warning('Vui lòng nhập tên khách hàng và số bàn');
+        if (!selectedTableId) {
+            toast.warning('Vui lòng chọn bàn');
+            return;
+        }
+
+        if (numberOfGuests < 1) {
+            toast.warning('Số khách phải lớn hơn 0');
             return;
         }
 
@@ -102,17 +131,37 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
             return;
         }
 
-        const orderData = {
-            customer,
-            table,
-            items: validItems.length,
-            total,
-            status: 'pending',
-            orderItems: validItems
+        // Find selected table
+        const selectedTable = occupiedTables.find(t => t.id === selectedTableId);
+        if (!selectedTable) {
+            toast.error('Không tìm thấy thông tin bàn');
+            return;
+        }
+
+        // Build payload matching backend schema
+        const payload: CreateOrderPayload = {
+            tableId: selectedTableId,
+            tableNumber: selectedTable.number,
+            numberOfGuests,
+            items: validItems.map(item => ({
+                menuItemId: item.menuItemId,
+                name: item.name,
+                quantity: item.quantity,
+                price: item.price,
+                notes: item.notes || undefined,
+
+                estimatedTime: item.estimatedTime,
+                priority: item.priority
+            })),
+            notes: orderNotes || undefined
         };
 
-        onSubmit(orderData);
-        onClose();
+        // Call API
+        const result = await createOrder(payload);
+
+        if (result) {
+            onClose();
+        }
     };
 
     if (!isOpen) return null;
@@ -146,62 +195,62 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
 
                 {/* Form Content */}
                 <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[calc(90vh-180px)] custom-scrollbar">
-                    {/* Customer Info Section */}
+                    {/* Table & Guest Info Section */}
                     <div className="mb-6">
                         <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                            <span className="text-2xl">👤</span>
-                            Thông tin khách hàng
+                            <span className="text-2xl">🪑</span>
+                            Thông tin bàn
                         </h3>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            {/* Customer Name */}
-                            <div>
-                                <label className="block text-sm font-medium text-gray-300 mb-2">
-                                    Tên khách hàng <span className="text-red-400">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    list="customers-list"
-                                    value={customer}
-                                    onChange={(e) => setCustomer(e.target.value)}
-                                    placeholder="Chọn hoặc nhập tên khách hàng"
-                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all"
-                                    required
-                                />
-                                <datalist id="customers-list">
-                                    {customers.map((c) => (
-                                        <option key={c.id} value={c.name}>
-                                            {c.name} - {c.membershipLevel.toUpperCase()} ({c.phone})
-                                        </option>
-                                    ))}
-                                </datalist>
-                                <p className="text-xs text-gray-500 mt-1">
-                                    Gõ để tìm khách quen hoặc nhập tên mới
-                                </p>
-                            </div>
-
-                            {/* Table */}
+                            {/* Table Selection */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-300 mb-2">
                                     Chọn bàn <span className="text-red-400">*</span>
                                 </label>
                                 <select
-                                    value={table}
-                                    onChange={(e) => setTable(e.target.value)}
+                                    value={selectedTableId}
+                                    onChange={(e) => {
+                                        const tableId = e.target.value;
+                                        setSelectedTableId(tableId);
+                                        const table = occupiedTables.find(t => t.id === tableId);
+                                        if (table?.activeSession?.currentGuests) {
+                                            setNumberOfGuests(table.activeSession.currentGuests);
+                                        }
+                                    }}
                                     className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all cursor-pointer"
                                     required
                                 >
                                     <option value="" className="bg-gray-800">Chọn bàn...</option>
-                                    {tables
-                                        .filter(t => t.status === 'available')
-                                        .map((t) => (
-                                            <option key={t.id} value={`Bàn ${t.number}`} className="bg-gray-800">
-                                                Bàn {t.number} - {t.capacity} chỗ ({t.section}, {t.floor})
-                                            </option>
-                                        ))
-                                    }
+                                    {occupiedTables.map((t) => (
+                                        <option key={t.id} value={t.id} className="bg-gray-800">
+                                            Bàn {t.number} - {t.capacity} chỗ ({t.section}, {t.floor})
+                                        </option>
+                                    ))}
                                 </select>
+                                <p className="text-xs text-blue-400 mt-1">
+                                    {occupiedTables.length === 0 ? 'Chưa có bàn nào check-in' : `${occupiedTables.length} bàn đang hoạt động`}
+                                </p>
+                            </div>
+
+                            {/* Number of Guests */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-300 mb-2">
+                                    Số khách <span className="text-red-400">*</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    max="20"
+                                    value={numberOfGuests}
+                                    onChange={(e) => setNumberOfGuests(parseInt(e.target.value) || 1)}
+                                    placeholder="Nhập số khách"
+                                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all opacity-70 cursor-not-allowed"
+                                    required
+                                    disabled
+                                    title="Số khách được lấy từ thông tin check-in bàn"
+                                />
                                 <p className="text-xs text-gray-500 mt-1">
-                                    Chỉ hiển thị bàn trống
+                                    Số lượng khách ngồi bàn (đã check-in)
                                 </p>
                             </div>
                         </div>
@@ -226,7 +275,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
 
                         {/* Category Filter */}
                         <div className="flex flex-wrap gap-2 mb-4">
-                            {categories.map((category: string) => (
+                            {categories.map((category) => (
                                 <button
                                     key={category}
                                     type="button"
@@ -242,7 +291,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                         </div>
 
                         <div className="space-y-3">
-                            {orderItems.map((item, index) => {
+                            {orderItems.map((item) => {
                                 const selectedMenuItem = item.menuItemId ? menuItems.find(m => m.id === item.menuItemId) : undefined;
 
                                 return (
@@ -257,7 +306,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                                     Chọn món <span className="text-red-400">*</span>
                                                 </label>
                                                 <select
-                                                    value={item.menuItemId === '' ? '' : item.menuItemId}
+                                                    value={item.menuItemId}
                                                     onChange={(e) => handleMenuItemSelect(item.id, e.target.value)}
                                                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                                                     required
@@ -310,8 +359,8 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                                 </label>
                                                 <input
                                                     type="text"
-                                                    value={item.note || ''}
-                                                    onChange={(e) => updateOrderItem(item.id, 'note', e.target.value)}
+                                                    value={item.notes}
+                                                    onChange={(e) => updateOrderItem(item.id, 'notes', e.target.value)}
                                                     placeholder="VD: Ít cay..."
                                                     className="w-full px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-sm placeholder-gray-600"
                                                 />
@@ -337,7 +386,7 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                         {item.menuItemId && item.price > 0 && (
                                             <div className="mt-3 pt-3 border-t border-white/10 flex items-center justify-between">
                                                 <div className="text-xs text-gray-500 italic">
-                                                    {item.note && `Ghi chú: ${item.note}`}
+                                                    {item.notes && `Ghi chú: ${item.notes}`}
                                                 </div>
                                                 <p className="text-sm text-gray-400">
                                                     Thành tiền: <span className="text-blue-400 font-semibold text-base">
@@ -350,6 +399,20 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                                 );
                             })}
                         </div>
+                    </div>
+
+                    {/* Order Notes */}
+                    <div className="mb-6">
+                        <label className="block text-sm font-medium text-gray-300 mb-2">
+                            Ghi chú đơn hàng
+                        </label>
+                        <textarea
+                            value={orderNotes}
+                            onChange={(e) => setOrderNotes(e.target.value)}
+                            placeholder="Ghi chú đặc biệt cho đơn hàng..."
+                            rows={2}
+                            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all resize-none"
+                        />
                     </div>
 
                     {/* Total Section */}
@@ -375,15 +438,17 @@ export default function CreateOrderOverlay({ isOpen, onClose, onSubmit }: Create
                         <button
                             type="button"
                             onClick={onClose}
-                            className="flex-1 px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 transition-all duration-300 cursor-pointer"
+                            disabled={isCreatingOrder}
+                            className="flex-1 px-6 py-3 bg-white/5 border border-white/10 rounded-xl text-white font-medium hover:bg-white/10 transition-all duration-300 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Hủy
                         </button>
                         <button
                             type="submit"
-                            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 cursor-pointer"
+                            disabled={isCreatingOrder}
+                            className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/50 transition-all duration-300 hover:scale-105 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Tạo đơn hàng
+                            {isCreatingOrder ? 'Đang tạo...' : 'Tạo đơn hàng'}
                         </button>
                     </div>
                 </form>

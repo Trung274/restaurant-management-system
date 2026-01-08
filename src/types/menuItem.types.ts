@@ -1,4 +1,3 @@
-// API Response từ backend
 export interface MenuItemResponse {
     _id: string;
     name: string;
@@ -12,6 +11,8 @@ export interface MenuItemResponse {
     popular: boolean;
     spicy: boolean;
     vegetarian: boolean;
+
+    estimatedTime?: number;
     createdAt: string;
     updatedAt: string;
 }
@@ -30,6 +31,8 @@ export interface MenuItem {
     popular: boolean;
     spicy: boolean;
     vegetarian: boolean;
+
+    estimatedTime?: number; // Estimated preparation time in minutes
 }
 
 // Create/Update payload

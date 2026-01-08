@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { orders } from './mockData';
+import { useState, useMemo, useEffect } from 'react';
+import { useOrdersStore } from '@/stores/ordersStore';
 import StatsCard from '@/components/ui/StatsCard';
 import {
   MagnifyingGlassIcon,
@@ -105,31 +105,39 @@ const ordersStats = [
 ];
 
 export default function OrdersPage() {
+  const { orders, stats, isLoading, fetchOrders, fetchStats } = useOrdersStore();
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
 
+  // Fetch orders on mount
+  useEffect(() => {
+    fetchOrders();
+    fetchStats();
+  }, [fetchOrders, fetchStats]);
+
   const handleCreateOrder = (orderData: any) => {
     console.log('New order created:', orderData);
-    // TODO: Add order to the list or send to backend
+    // Order creation is handled in CreateOrderOverlay
   };
 
   const filteredOrders = useMemo(() => {
     return orders.filter(order => {
       const matchStatus = selectedStatus === 'all' || order.status === selectedStatus;
       const matchSearch =
-        order.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.tableName.toLowerCase().includes(searchQuery.toLowerCase());
+        order._id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.tableNumber.toLowerCase().includes(searchQuery.toLowerCase());
       return matchStatus && matchSearch;
     });
   }, [orders, selectedStatus, searchQuery]);
 
-  const totalOrders = orders.length;
-  const pendingOrders = orders.filter(o => o.status === 'pending').length;
-  const processingOrders = orders.filter(o => o.status === 'in-progress').length;
-  const completedOrders = orders.filter(o => o.status === 'completed' || o.status === 'ready').length; // ready counts as completed/processing depending on view, grouping for stats
-  const cancelledOrders = orders.filter(o => o.status === 'cancelled').length;
+
+  // Calculate stats from API or fallback to manual calculation
+  const totalOrders = stats?.total || orders.length;
+  const pendingOrders = stats?.pending || orders.filter(o => o.status === 'pending').length;
+  const processingOrders = stats?.inProgress || orders.filter(o => o.status === 'in-progress').length;
+  const completedOrders = stats?.completed || orders.filter(o => o.status === 'completed' || o.status === 'ready').length;
+  const cancelledOrders = stats?.cancelled || orders.filter(o => o.status === 'cancelled').length;
 
   // Tính toán stats động
   const statsData = useMemo(() => {
@@ -156,6 +164,7 @@ export default function OrdersPage() {
       return { ...stat, value };
     });
   }, [totalOrders, pendingOrders, processingOrders, completedOrders, cancelledOrders]);
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">
@@ -234,15 +243,23 @@ export default function OrdersPage() {
         ))}
       </div>
 
+
       {/* Orders List */}
-      <div className="space-y-4">
-        {filteredOrders.map((order) => {
-          const config = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.pending; // Fallback
-          return (
-            <OrderListItem key={order.id} order={order} config={config} />
-          );
-        })}
-      </div>
+      {isLoading ? (
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+        </div>
+      ) : (
+        <div className="space-y-4">
+          {filteredOrders.map((order) => {
+            const config = statusConfig[order.status as keyof typeof statusConfig] || statusConfig.pending; // Fallback
+            return (
+              <OrderListItem key={order._id} order={order} config={config} />
+            );
+          })}
+        </div>
+      )}
+
 
       {/* Empty State */}
       {filteredOrders.length === 0 && (
@@ -267,7 +284,6 @@ export default function OrdersPage() {
       <CreateOrderOverlay
         isOpen={isOverlayOpen}
         onClose={() => setIsOverlayOpen(false)}
-        onSubmit={handleCreateOrder}
       />
     </div>
   );

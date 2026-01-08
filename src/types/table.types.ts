@@ -1,7 +1,3 @@
-// ============================================
-// API Response Types (from Backend)
-// ============================================
-
 export interface TableApiData {
     _id: string;
     number: string;
