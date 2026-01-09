@@ -18,12 +18,15 @@ import {
   ExclamationCircleIcon,
 } from '@heroicons/react/24/outline';
 import { useAuth, useRedirectIfAuthenticated } from '@/hooks/useAuth';
+import { useRestaurantStore } from '@/stores/restaurantStore';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, error, clearError, isLoading } = useAuth();
   const { isAuthenticated } = useRedirectIfAuthenticated();
+  const restaurant = useRestaurantStore(state => state.restaurant);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -70,19 +73,7 @@ export default function LoginPage() {
 
   // Don't render form if already authenticated (will redirect)
   if (isAuthenticated) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-6">
-          {/* Placeholder for animated GIF - replace src with your GIF path */}
-          <img
-            src="/waiting.gif"
-            alt="Loading..."
-            className="w-32 h-32 object-contain"
-          />
-          <div className="text-white text-lg">Đang chuyển hướng...</div>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner fullScreen message="Đang chuyển hướng..." />;
   }
 
   const features = [
@@ -146,7 +137,7 @@ export default function LoginPage() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl blur-xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
               <div className="relative bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6">
                 <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">
-                  Nhà hàng ABCDE
+                  {restaurant?.name || 'Nhà hàng'}
                 </h1>
               </div>
             </div>

@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import type { Order } from '@/types/order.types';
 import { useOrdersStore } from '@/stores/ordersStore';
+import ConfirmActionOverlay from '@/components/forms/ConfirmActionOverlay';
 import {
     XMarkIcon,
     ClockIcon,
     UserCircleIcon,
     CurrencyDollarIcon
-} from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline'; // Check if other icons needed
 
 interface OrderDetailModalProps {
     order: Order | null;
@@ -19,7 +20,8 @@ interface OrderDetailModalProps {
 export default function OrderDetailModal({ order, isOpen, onClose }: OrderDetailModalProps) {
     const { serveOrder, cancelOrder } = useOrdersStore();
     const [isServing, setIsServing] = useState(false);
-    const [isCancelling, setIsCancelling] = useState(false);
+    const [isCancelling, setIsCancelling] = useState(false); // Used for loading state
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false); // Used for overlay visibility
 
     if (!isOpen || !order) return null;
 
@@ -30,11 +32,15 @@ export default function OrderDetailModal({ order, isOpen, onClose }: OrderDetail
         onClose();
     };
 
-    const handleCancel = async () => {
-        if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) return;
+    const handleCancelClick = () => {
+        setShowCancelConfirm(true);
+    };
+
+    const handleConfirmCancel = async () => {
         setIsCancelling(true);
         await cancelOrder(order._id, 'Cancelled by user');
         setIsCancelling(false);
+        setShowCancelConfirm(false);
         onClose();
     };
 
@@ -323,7 +329,7 @@ export default function OrderDetailModal({ order, isOpen, onClose }: OrderDetail
 
                         {order.status === 'pending' && (
                             <button
-                                onClick={handleCancel}
+                                onClick={handleCancelClick}
                                 disabled={isCancelling}
                                 className="flex-1 px-6 py-3 bg-gradient-to-r from-red-600 to-pink-600 rounded-xl text-white font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                             >
@@ -343,6 +349,18 @@ export default function OrderDetailModal({ order, isOpen, onClose }: OrderDetail
                     </div>
                 </div>
             </div>
-        </div>
+
+            <ConfirmActionOverlay
+                isOpen={showCancelConfirm}
+                onClose={() => setShowCancelConfirm(false)}
+                onConfirm={handleConfirmCancel}
+                title="Xác nhận hủy đơn"
+                description={`Bạn có chắc chắn muốn hủy đơn hàng #${order._id.slice(-8)} không? hành động này không thể hoàn tác.`}
+                confirmText="Hủy đơn"
+                cancelText="Quay lại"
+                type="danger"
+                isLoading={isCancelling}
+            />
+        </div >
     );
 }

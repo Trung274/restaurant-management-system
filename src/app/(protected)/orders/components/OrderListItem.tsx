@@ -4,6 +4,7 @@ import { useState } from 'react';
 import type { Order } from '@/types/order.types';
 import { useOrdersStore } from '@/stores/ordersStore';
 import OrderDetailModal from './OrderDetailModal';
+import ConfirmActionOverlay from '@/components/forms/ConfirmActionOverlay';
 import {
     ClockIcon,
     FireIcon,
@@ -22,7 +23,8 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
     const StatusIcon = config.icon;
     const { serveOrder, cancelOrder } = useOrdersStore();
     const [isServing, setIsServing] = useState(false);
-    const [isCancelling, setIsCancelling] = useState(false);
+    const [isCancelling, setIsCancelling] = useState(false); // Used for modal visibility
+    const [isProcessing, setIsProcessing] = useState(false); // Used for API loading
     const [showDetailModal, setShowDetailModal] = useState(false);
 
     const handleServe = async () => {
@@ -31,10 +33,14 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
         setIsServing(false);
     };
 
-    const handleCancel = async () => {
-        if (!confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) return;
+    const handleCancelClick = () => {
         setIsCancelling(true);
+    };
+
+    const handleConfirmCancel = async () => {
+        setIsProcessing(true);
         await cancelOrder(order._id, 'Cancelled by user');
+        setIsProcessing(false);
         setIsCancelling(false);
     };
 
@@ -107,11 +113,10 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
 
                             {order.status === 'pending' && (
                                 <button
-                                    onClick={handleCancel}
-                                    disabled={isCancelling}
+                                    onClick={handleCancelClick}
                                     className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 rounded-lg text-white hover:shadow-lg transition-all shadow-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    {isCancelling ? 'Đang hủy...' : 'Hủy'}
+                                    Hủy
                                 </button>
                             )}
 
@@ -139,6 +144,18 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
                 order={order}
                 isOpen={showDetailModal}
                 onClose={() => setShowDetailModal(false)}
+            />
+
+            <ConfirmActionOverlay
+                isOpen={isCancelling}
+                onClose={() => setIsCancelling(false)}
+                onConfirm={handleConfirmCancel}
+                title="Xác nhận hủy đơn"
+                description={`Bạn có chắc chắn muốn hủy đơn hàng #${order._id.slice(-8)} không? hành động này không thể hoàn tác.`}
+                confirmText="Hủy đơn"
+                cancelText="Quay lại"
+                type="danger"
+                isLoading={isProcessing}
             />
         </>
     );

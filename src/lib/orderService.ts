@@ -69,9 +69,10 @@ export const serveAllItems = async (orderId: string): Promise<Order> => {
  * Cancel an order
  */
 export const cancelOrder = async (orderId: string, reason?: string): Promise<Order> => {
-    const response = await apiClient.delete<OrderApiResponse>(`/orders/${orderId}`, {
-        data: { reason },
-    });
+    const response = await apiClient.patch<OrderApiResponse>(
+        `/orders/${orderId}/cancel`,
+        { reason }
+    );
     return response.data.data;
 };
 
