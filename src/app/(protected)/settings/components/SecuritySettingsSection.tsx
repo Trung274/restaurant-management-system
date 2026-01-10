@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { CheckIcon } from '@heroicons/react/24/outline';
+import ButtonSpinner from '@/components/ui/ButtonSpinner';
 import { changePassword } from '@/lib/userService';
 import { toast } from '@/utils/toast';
 
@@ -127,7 +128,7 @@ export const SecuritySettingsSection = () => {
                                 </>
                             ) : saveStatus === 'saving' ? (
                                 <>
-                                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                    <ButtonSpinner />
                                     Đang lưu...
                                 </>
                             ) : (

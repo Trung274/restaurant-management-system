@@ -5,6 +5,7 @@ import { useRestaurant } from '@/hooks/useRestaurant';
 import { useAuth } from '@/hooks/useAuth';
 import { hasPermission } from '@/lib/auth';
 import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
+import ButtonSpinner from '@/components/ui/ButtonSpinner';
 
 export function GeneralSettingsSection({ gradient }: { gradient?: string }) {
   const { user } = useAuth();
@@ -102,7 +103,7 @@ export function GeneralSettingsSection({ gradient }: { gradient?: string }) {
     return (
       <div className="p-6 bg-red-500/10 border border-red-500/20 rounded-2xl">
         <p className="text-red-400">❌ {error}</p>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           className="mt-4 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors"
         >
@@ -148,7 +149,7 @@ export function GeneralSettingsSection({ gradient }: { gradient?: string }) {
                   </>
                 ) : saveStatus === 'saving' ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    <ButtonSpinner />
                     Đang lưu...
                   </>
                 ) : (

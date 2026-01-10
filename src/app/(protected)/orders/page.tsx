@@ -15,6 +15,7 @@ import {
 } from '@heroicons/react/24/outline';
 import PageHeader from '@/components/ui/PageHeader';
 import SearchBar from '@/components/ui/SearchBar';
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import CreateOrderOverlay from './components/CreateOrderOverlay';
 import OrderListItem from './components/OrderListItem';
 
@@ -246,9 +247,7 @@ export default function OrdersPage() {
 
       {/* Orders List */}
       {isLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
-        </div>
+        <LoadingSpinner message="Đang tải đơn hàng..." />
       ) : (
         <div className="space-y-4">
           {filteredOrders.map((order) => {

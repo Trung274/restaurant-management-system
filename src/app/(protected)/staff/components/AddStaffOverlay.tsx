@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { XMarkIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { toast } from '@/utils/toast';
 import { CreateUserPayload } from '@/types/auth.types';
+import ButtonSpinner from '@/components/ui/ButtonSpinner';
 
 interface AddStaffOverlayProps {
     isOpen: boolean;
@@ -285,7 +286,7 @@ export default function AddStaffOverlay({ isOpen, onClose, onSubmit, isLoading =
                         >
                             {isLoading ? (
                                 <>
-                                    <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                                    <ButtonSpinner />
                                     <span>Đang xử lý...</span>
                                 </>
                             ) : (
