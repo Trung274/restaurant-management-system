@@ -34,7 +34,13 @@ export interface OrderItem {
 
 export interface Order {
     _id: string;
-    tableId: string;
+    tableId: string | {
+        _id: string;
+        number: string;
+        floor: string;
+        section: string;
+        id: string;
+    };
     tableNumber: string;
     numberOfGuests: number;
     items: OrderItem[];

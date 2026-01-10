@@ -82,7 +82,12 @@ export default function OrderDetailModal({ order, isOpen, onClose }: OrderDetail
                     <div className="flex items-center justify-between">
                         <div>
                             <h2 className="text-2xl font-bold text-white mb-1">Chi tiết đơn hàng</h2>
-                            <p className="text-gray-400 text-sm">#{order._id}</p>
+                            <p className="text-gray-400 text-sm">
+                                {typeof order.tableId === 'object'
+                                    ? `${order.tableId.floor} - Bàn ${order.tableId.number}`
+                                    : `Bàn ${order.tableNumber}`
+                                }
+                            </p>
                         </div>
                         <button
                             onClick={onClose}
@@ -99,7 +104,12 @@ export default function OrderDetailModal({ order, isOpen, onClose }: OrderDetail
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                             <p className="text-xs text-gray-400 mb-1">Bàn</p>
-                            <p className="text-lg font-bold text-white">{order.tableNumber}</p>
+                            <p className="text-lg font-bold text-white">
+                                {typeof order.tableId === 'object'
+                                    ? `${order.tableId.floor} - Bàn ${order.tableId.number}`
+                                    : order.tableNumber
+                                }
+                            </p>
                         </div>
                         <div className="bg-white/5 rounded-xl p-4 border border-white/10">
                             <p className="text-xs text-gray-400 mb-1">Số khách</p>

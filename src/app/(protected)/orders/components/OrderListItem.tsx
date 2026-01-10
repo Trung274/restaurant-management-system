@@ -64,15 +64,17 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
                         {/* Order Info */}
                         <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                                <h3 className="text-xl font-bold text-white">{order._id.slice(-8)}</h3>
+                                <h3 className="text-xl font-bold text-white">
+                                    {typeof order.tableId === 'object'
+                                        ? `${order.tableId.floor} - Bàn ${order.tableId.number}`
+                                        : `Bàn ${order.tableNumber}`
+                                    }
+                                </h3>
                                 <span className={`px-3 py-1 rounded-full text-xs font-medium bg-gradient-to-r ${config.gradient} text-white flex items-center gap-1`}>
                                     {config.label}
                                 </span>
                             </div>
                             <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                                <span className="flex items-center gap-1">
-                                    🪑 {order.tableNumber}
-                                </span>
                                 <span className="flex items-center gap-1">
                                     👥 {order.numberOfGuests} khách
                                 </span>
