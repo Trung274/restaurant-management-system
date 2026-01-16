@@ -86,13 +86,26 @@ export interface Order {
 }
 
 export interface OrderStats {
-    total: number;
-    pending: number;
-    inProgress: number;
-    ready: number;
-    completed: number;
-    cancelled: number;
+    byStatus: {
+        pending?: number;
+        'in-progress'?: number;
+        ready?: number;
+        completed?: number;
+        cancelled?: number;
+    };
+    today: {
+        _id: null;
+        totalOrders: number;
+        totalRevenue: number;
+        avgOrderValue: number;
+    };
+    overall: {
+        _id: null;
+        totalOrders: number;
+        totalRevenue: number;
+    };
 }
+
 
 // API Request/Response types
 export interface CreateOrderPayload {

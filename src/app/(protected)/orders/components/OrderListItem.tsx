@@ -5,6 +5,7 @@ import type { Order } from '@/types/order.types';
 import { useOrdersStore } from '@/stores/ordersStore';
 import OrderDetailModal from './OrderDetailModal';
 import ConfirmActionOverlay from '@/components/forms/ConfirmActionOverlay';
+import CreatePaymentModal from './CreatePaymentModal';
 import {
     ClockIcon,
     FireIcon,
@@ -26,6 +27,7 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
     const [isCancelling, setIsCancelling] = useState(false); // Used for modal visibility
     const [isProcessing, setIsProcessing] = useState(false); // Used for API loading
     const [showDetailModal, setShowDetailModal] = useState(false);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
 
     const handleServe = async () => {
         setIsServing(true);
@@ -133,7 +135,10 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
                             )}
 
                             {order.status === 'completed' && (
-                                <button className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg text-white hover:shadow-lg transition-all shadow-green-500/20">
+                                <button
+                                    onClick={() => setShowPaymentModal(true)}
+                                    className="px-4 py-2 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg text-white hover:shadow-lg transition-all shadow-green-500/20"
+                                >
                                     Thanh toán
                                 </button>
                             )}
@@ -158,6 +163,16 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
                 cancelText="Quay lại"
                 type="danger"
                 isLoading={isProcessing}
+            />
+
+            <CreatePaymentModal
+                order={order}
+                isOpen={showPaymentModal}
+                onClose={() => setShowPaymentModal(false)}
+                onSuccess={() => {
+                    // Optionally refresh orders list
+                    setShowPaymentModal(false);
+                }}
             />
         </>
     );

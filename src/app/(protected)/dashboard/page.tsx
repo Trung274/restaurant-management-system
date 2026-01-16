@@ -2,6 +2,9 @@
 import MenuStatsSection from './components/MenuStatsSection';
 import TableStatsSection from './components/TableStatsSection';
 import UserStatsSection from './components/UserStatsSection';
+import OrderStatsSection from './components/OrderStatsSection';
+import KitchenStatsSection from './components/KitchenStatsSection';
+import RevenueStatsSection from './components/RevenueStatsSection';
 import PageHeader from '@/components/ui/PageHeader';
 import { useRestaurantStore } from '@/stores/restaurantStore';
 
@@ -18,6 +21,15 @@ export default function DashboardPage() {
         titleEnglish={restaurantName}
         description="Theo dõi hoạt động kinh doanh và hiệu suất nhà hàng"
       />
+
+      {/* Revenue Stats Section */}
+      <RevenueStatsSection />
+
+      {/* Order Stats Section */}
+      <OrderStatsSection />
+
+      {/* Kitchen Stats Section */}
+      <KitchenStatsSection />
 
       {/* Menu Stats Section */}
       <MenuStatsSection />

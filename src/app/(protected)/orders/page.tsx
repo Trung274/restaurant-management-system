@@ -134,11 +134,11 @@ export default function OrdersPage() {
 
 
   // Calculate stats from API or fallback to manual calculation
-  const totalOrders = stats?.total || orders.length;
-  const pendingOrders = stats?.pending || orders.filter(o => o.status === 'pending').length;
-  const processingOrders = stats?.inProgress || orders.filter(o => o.status === 'in-progress').length;
-  const completedOrders = stats?.completed || orders.filter(o => o.status === 'completed' || o.status === 'ready').length;
-  const cancelledOrders = stats?.cancelled || orders.filter(o => o.status === 'cancelled').length;
+  const totalOrders = stats?.overall?.totalOrders || orders.length;
+  const pendingOrders = stats?.byStatus?.pending || orders.filter(o => o.status === 'pending').length;
+  const processingOrders = stats?.byStatus?.['in-progress'] || orders.filter(o => o.status === 'in-progress').length;
+  const completedOrders = stats?.byStatus?.completed || orders.filter(o => o.status === 'completed' || o.status === 'ready').length;
+  const cancelledOrders = stats?.byStatus?.cancelled || orders.filter(o => o.status === 'cancelled').length;
 
   // Tính toán stats động
   const statsData = useMemo(() => {
