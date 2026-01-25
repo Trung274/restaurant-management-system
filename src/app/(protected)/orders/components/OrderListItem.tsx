@@ -67,7 +67,7 @@ export default function OrderListItem({ order, config }: OrderListItemProps) {
                         <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
                                 <h3 className="text-xl font-bold text-white">
-                                    {typeof order.tableId === 'object'
+                                    {order.tableId && typeof order.tableId === 'object'
                                         ? `${order.tableId.floor} - Bàn ${order.tableId.number}`
                                         : `Bàn ${order.tableNumber}`
                                     }

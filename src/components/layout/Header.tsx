@@ -123,7 +123,7 @@ export default function Header({ onMenuClick }: HeaderProps) {
                                 )}
 
                                 {/* Online status */}
-                                {user?.isActive && (
+                                {isMounted && user?.isActive && (
                                     <div className="absolute bottom-0 right-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-green-400 rounded-full border-2 border-gray-900"></div>
                                 )}
                             </div>
