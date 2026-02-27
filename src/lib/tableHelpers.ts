@@ -59,10 +59,15 @@ export const transformTable = (apiTable: TableApiData): Table => {
     return table;
 };
 
+interface ApiError {
+    response?: { data?: { message?: string; error?: string } };
+    message?: string;
+}
+
 /**
  * Extract error message from API error response
  */
-export const getTableErrorMessage = (error: any): string => {
+export const getTableErrorMessage = (error: ApiError): string => {
     if (error.response?.data?.message) {
         return error.response.data.message;
     }

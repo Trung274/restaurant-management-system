@@ -30,8 +30,8 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
         try {
             const { orders } = await orderService.getOrders(params);
             set({ orders, isLoading: false });
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to fetch orders';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to fetch orders';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
         }
@@ -43,8 +43,8 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
             const order = await orderService.getOrderById(id);
             set({ isLoading: false });
             return order;
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to fetch order';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to fetch order';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
             return null;
@@ -68,8 +68,8 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
             get().fetchStats();
 
             return newOrder;
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to create order';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to create order';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
             return null;
@@ -93,8 +93,8 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
 
             // Refresh stats
             get().fetchStats();
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to serve order';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to serve order';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
         }
@@ -115,8 +115,8 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
 
             // Refresh stats
             get().fetchStats();
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to cancel order';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to cancel order';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
         }
@@ -126,7 +126,7 @@ export const useOrdersStore = create<OrdersState>((set, get) => ({
         try {
             const stats = await orderService.getOrderStats();
             set({ stats });
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Failed to fetch order stats:', error);
         }
     },

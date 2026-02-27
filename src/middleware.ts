@@ -52,7 +52,7 @@ export function middleware(request: NextRequest) {
   );
 
   // Check if the current route is public
-  const isPublicRoute = publicRoutes.includes(pathname);
+  const _isPublicRoute = publicRoutes.includes(pathname);
 
   // ============================================
   // REDIRECT LOGIC

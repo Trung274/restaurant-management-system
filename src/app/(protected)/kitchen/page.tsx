@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Order, OrderItem } from '@/types/order.types';
 import { useKitchenStore } from '@/stores/kitchenStore';
 import PageHeader from '@/components/ui/PageHeader';
@@ -14,7 +14,7 @@ import {
 } from '@heroicons/react/24/outline';
 
 export default function KitchenPage() {
-    const { kitchenQueue, fetchQueue, startItem, markItemReady, isLoading } = useKitchenStore();
+    const { kitchenQueue, fetchQueue, startItem, markItemReady } = useKitchenStore();
 
     // Fetch kitchen queue on mount
     useEffect(() => {
@@ -112,7 +112,7 @@ function KitchenColumn({
 }: {
     title: string;
     orders: Order[];
-    icon: any;
+    icon: React.ComponentType<{ className?: string }>;
     color: 'blue' | 'orange' | 'green';
     onStartItem: (itemId: string, orderId: string) => Promise<void>;
     onMarkReady: (itemId: string, orderId: string) => Promise<void>;
@@ -157,7 +157,6 @@ function KitchenColumn({
                     <KitchenOrderCard
                         key={order._id}
                         order={order}
-                        color={color}
                         onStartItem={onStartItem}
                         onMarkReady={onMarkReady}
                     />
@@ -175,12 +174,10 @@ function KitchenColumn({
 
 function KitchenOrderCard({
     order,
-    color,
     onStartItem,
     onMarkReady
 }: {
     order: Order;
-    color: string;
     onStartItem: (itemId: string, orderId: string) => Promise<void>;
     onMarkReady: (itemId: string, orderId: string) => Promise<void>;
 }) {
@@ -268,11 +265,7 @@ function KitchenItemCard({
         urgent: 'text-red-400 bg-red-500/20'
     };
 
-    const priorityLabels = {
-        normal: 'Bình thường',
-        high: 'Cao',
-        urgent: 'Khẩn cấp'
-    };
+
 
     return (
         <div className="bg-gray-700/30 rounded-lg p-3 border border-white/5">

@@ -39,8 +39,8 @@ export const usePaymentsStore = create<PaymentsState>((set, get) => ({
                 pagination: { count, total, currentPage, totalPages },
                 isLoading: false,
             });
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to fetch payments';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to fetch payments';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
         }
@@ -52,8 +52,8 @@ export const usePaymentsStore = create<PaymentsState>((set, get) => ({
             const payment = await paymentService.getPaymentById(id);
             set({ isLoading: false });
             return payment;
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to fetch payment';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to fetch payment';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
             return null;
@@ -77,8 +77,8 @@ export const usePaymentsStore = create<PaymentsState>((set, get) => ({
             get().fetchStats();
 
             return newPayment;
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to create payment';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to create payment';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
             return null;
@@ -89,7 +89,7 @@ export const usePaymentsStore = create<PaymentsState>((set, get) => ({
         try {
             const stats = await paymentService.getPaymentStats();
             set({ stats });
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Failed to fetch payment stats:', error);
         }
     },

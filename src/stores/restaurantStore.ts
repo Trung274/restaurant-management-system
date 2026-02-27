@@ -28,12 +28,13 @@ export const useRestaurantStore = create<RestaurantState>()(
               isLoading: false,
               error: null,
             });
-          } catch (error: any) {
+          } catch (error: unknown) {
             // Only set error if it's not a 401 (unauthorized)
             // This prevents error appearing on login page if auto-fetch fails
-            const status = error.response?.status;
+            const axiosError = error as { response?: { status?: number; data?: { message?: string } } };
+            const status = axiosError.response?.status;
             if (status !== 401) {
-              const errorMessage = error.response?.data?.message || 'Không thể tải thông tin nhà hàng';
+              const errorMessage = axiosError.response?.data?.message || 'Không thể tải thông tin nhà hàng';
               set({
                 restaurant: null,
                 isLoading: false,
@@ -58,8 +59,8 @@ export const useRestaurantStore = create<RestaurantState>()(
               isLoading: false,
               error: null,
             });
-          } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Không thể cập nhật thông tin nhà hàng';
+          } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Không thể cập nhật thông tin nhà hàng';
             set({
               isLoading: false,
               error: errorMessage,

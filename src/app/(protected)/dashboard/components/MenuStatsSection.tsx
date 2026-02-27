@@ -7,6 +7,7 @@ import { useMenuStore } from '@/stores/menuStore';
 export default function MenuStatsSection() {
     const { stats, isLoading, error, fetchStats } = useMenuStore();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         console.log('Dashboard: Fetching menu stats...');
         fetchStats().then(() => {

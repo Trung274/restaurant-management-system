@@ -29,8 +29,8 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
         try {
             const { orders } = await kitchenService.getKitchenQueue(params);
             set({ kitchenQueue: orders, isLoading: false });
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to fetch kitchen queue';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to fetch kitchen queue';
             set({ error: errorMessage, isLoading: false });
             toast.error(errorMessage);
         }
@@ -46,7 +46,7 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
                     if (order._id === orderId) {
                         return {
                             ...order,
-                            status: result.order.status as any,
+                            status: result.order.status as Order['status'],
                             kitchenProgress: result.order.kitchenProgress,
                             items: order.items.map((item) =>
                                 item._id === itemId ? result.item : item
@@ -61,8 +61,8 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
 
             // Refresh stats
             get().fetchStats();
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to start item';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to start item';
             toast.error(errorMessage);
         }
     },
@@ -77,7 +77,7 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
                     if (order._id === orderId) {
                         return {
                             ...order,
-                            status: result.order.status as any,
+                            status: result.order.status as Order['status'],
                             kitchenProgress: result.order.kitchenProgress,
                             items: order.items.map((item) =>
                                 item._id === itemId ? result.item : item
@@ -92,8 +92,8 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
 
             // Refresh stats
             get().fetchStats();
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to mark item ready';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to mark item ready';
             toast.error(errorMessage);
         }
     },
@@ -118,8 +118,8 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
             }));
 
             toast.success('Đã cập nhật độ ưu tiên');
-        } catch (error: any) {
-            const errorMessage = error.response?.data?.message || 'Failed to update priority';
+        } catch (error: unknown) {
+            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Failed to update priority';
             toast.error(errorMessage);
         }
     },
@@ -128,7 +128,7 @@ export const useKitchenStore = create<KitchenState>((set, get) => ({
         try {
             const stats = await kitchenService.getKitchenStats();
             set({ stats });
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.error('Failed to fetch kitchen stats:', error);
         }
     },
