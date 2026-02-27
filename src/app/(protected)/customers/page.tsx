@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import StatsCard from '@/components/ui/StatsCard';
 import {
     PlusIcon,
@@ -129,13 +128,10 @@ export default function CustomersPage() {
                                 <div className="flex items-start justify-between mb-4">
                                     <div className="relative">
                                         <div className={`absolute inset-0 bg-gradient-to-r ${membershipInfo.gradient} rounded-full blur opacity-30`}></div>
-                                        <Image
-                                            src={customer.avatar || '/default-fallback-image.png'}
+                                        <img
+                                            src={customer.avatar}
                                             alt={customer.name}
-                                            width={64}
-                                            height={64}
                                             className="relative w-16 h-16 rounded-full border-2 border-white/20"
-                                            unoptimized
                                         />
                                         {/* Membership badge */}
                                         <div className={`absolute -bottom-1 -right-1 w-7 h-7 bg-gradient-to-r ${membershipInfo.gradient} rounded-full flex items-center justify-center text-xs shadow-lg`}>

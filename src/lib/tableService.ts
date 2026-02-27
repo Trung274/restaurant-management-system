@@ -11,18 +11,15 @@ import type {
     UpdateLayoutPayload,
     Table,
     TableStatsResponse,
-    TableApiData,
 } from '@/types/table.types';
 import { transformTable } from './tableHelpers';
-
-type TableNestedResponse = { data: { data: { table?: TableApiData } & TableApiData } };
 
 /**
  * Get all tables with optional filters
  */
 export const getTables = async (
     params?: TableQueryParams
-): Promise<{ tables: Table[]; pagination?: unknown }> => {
+): Promise<{ tables: Table[]; pagination?: any }> => {
     const response = await apiClient.get<TablesApiResponse>('/tables', {
         params,
     });
@@ -101,7 +98,7 @@ export const checkInTable = async (
     id: string,
     payload: CheckInPayload
 ): Promise<Table> => {
-    const response = await apiClient.post<TableNestedResponse['data']>(`/tables/${id}/check-in`, payload);
+    const response = await apiClient.post<any>(`/tables/${id}/check-in`, payload);
     // Backend returns { success, message, data: { table, order } }
     const tableData = response.data.data?.table || response.data.data;
     return transformTable(tableData);
@@ -114,7 +111,7 @@ export const reserveTable = async (
     id: string,
     payload: ReservePayload
 ): Promise<Table> => {
-    const response = await apiClient.post<TableNestedResponse['data']>(`/tables/${id}/reserve`, payload);
+    const response = await apiClient.post<any>(`/tables/${id}/reserve`, payload);
     // Backend may return nested structure
     const tableData = response.data.data?.table || response.data.data;
     return transformTable(tableData);
@@ -124,7 +121,7 @@ export const reserveTable = async (
  * Checkout table (complete order and set status to cleaning)
  */
 export const checkoutTable = async (id: string): Promise<Table> => {
-    const response = await apiClient.post<TableNestedResponse['data']>(`/tables/${id}/checkout`);
+    const response = await apiClient.post<any>(`/tables/${id}/checkout`);
     // Backend returns { success, message, data: { table, order } }
     const tableData = response.data.data?.table || response.data.data;
     return transformTable(tableData);
@@ -134,7 +131,7 @@ export const checkoutTable = async (id: string): Promise<Table> => {
  * Clean table (set status to available)
  */
 export const cleanTable = async (id: string): Promise<Table> => {
-    const response = await apiClient.post<TableNestedResponse['data']>(`/tables/${id}/clean`);
+    const response = await apiClient.post<any>(`/tables/${id}/clean`);
     // Backend may return nested structure
     const tableData = response.data.data?.table || response.data.data;
     return transformTable(tableData);

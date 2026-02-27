@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Image from 'next/image';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { categories } from '../mockData';
 import type { MenuItemData } from './MenuItem';
@@ -97,7 +96,7 @@ export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem
         await onSubmit(menuItemData);
     };
 
-    const handleInputChange = (field: string, value: string | boolean | number) => {
+    const handleInputChange = (field: string, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
     };
 
@@ -341,13 +340,13 @@ export default function AddMenuItemOverlay({ isOpen, onClose, onSubmit, editItem
                             <div className="bg-gradient-to-br from-orange-600/20 to-amber-600/20 border border-orange-500/30 rounded-xl p-4">
                                 <div className="flex items-center gap-4">
                                     {formData.image && (
-                                        <Image
+                                        <img
                                             src={formData.image}
                                             alt={formData.name}
-                                            width={96}
-                                            height={96}
                                             className="w-24 h-24 rounded-lg object-cover"
-                                            unoptimized
+                                            onError={(e) => {
+                                                (e.target as HTMLImageElement).src = '/default-fallback-image.png';
+                                            }}
                                         />
                                     )}
                                     <div className="flex-1">

@@ -7,7 +7,6 @@ import {
     SparklesIcon
 } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
-import Image from 'next/image';
 
 export interface MenuItemData {
     id: string | number; // Support both API (string) and legacy (number)
@@ -43,12 +42,13 @@ export default function MenuItem({ item, onEdit, onDelete }: MenuItemProps) {
 
             {/* Image */}
             <div className="relative h-48 overflow-hidden">
-                <Image
-                    src={item.image || '/default-fallback-image.png'}
+                <img
+                    src={item.image}
                     alt={item.name}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-300"
-                    unoptimized
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                    onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/default-fallback-image.png';
+                    }}
                 />
 
                 {/* Badges */}

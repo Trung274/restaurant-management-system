@@ -54,8 +54,8 @@ export const useAuthStore = create<AuthState>()(
               isLoading: false,
               error: null,
             });
-          } catch (error: unknown) {
-            const errorMessage = (error as { response?: { data?: { message?: string } } }).response?.data?.message || 'Đăng nhập thất bại';
+          } catch (error: any) {
+            const errorMessage = error.response?.data?.message || 'Đăng nhập thất bại';
             set({
               user: null,
               token: null,
@@ -192,7 +192,7 @@ export const useAuthStore = create<AuthState>()(
                   isLoading: false,
                   error: null,
                 });
-              } catch (_retryError) {
+              } catch (retryError) {
                 // Failed again, clear auth
                 tokenStorage.clearAll();
                 set({
