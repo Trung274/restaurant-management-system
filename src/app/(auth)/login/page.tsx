@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { toast } from '@/utils/toast';
 import {
@@ -21,7 +21,8 @@ import { useAuth, useRedirectIfAuthenticated } from '@/hooks/useAuth';
 import { useRestaurantStore } from '@/stores/restaurantStore';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
-export default function LoginPage() {
+// Inner component that uses useSearchParams (must be wrapped in Suspense)
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, error, clearError, isLoading } = useAuth();
@@ -382,5 +383,14 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Default export wraps LoginForm in Suspense (required for useSearchParams in Next.js App Router)
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoadingSpinner fullScreen message="Đang tải..." />}>
+      <LoginForm />
+    </Suspense>
   );
 }
