@@ -8,7 +8,8 @@ import {
     XMarkIcon,
     ClockIcon,
     UserCircleIcon,
-} from '@heroicons/react/24/outline';
+    CurrencyDollarIcon
+} from '@heroicons/react/24/outline'; // Check if other icons needed
 
 interface OrderDetailModalProps {
     order: Order | null;

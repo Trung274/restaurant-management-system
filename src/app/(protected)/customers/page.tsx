@@ -3,12 +3,17 @@
 import { useState } from 'react';
 import StatsCard from '@/components/ui/StatsCard';
 import {
+    MagnifyingGlassIcon,
     PlusIcon,
     PencilSquareIcon,
     TrashIcon,
     EnvelopeIcon,
     PhoneIcon,
+    StarIcon,
     HeartIcon,
+    GiftIcon,
+    ChartBarIcon,
+    UserIcon
 } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid, StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import { customers, membershipConfig, customerStats } from './mockData';
@@ -29,7 +34,10 @@ export default function CustomersPage() {
         return membershipMatch && searchMatch && favoriteMatch;
     });
 
-
+    const totalCustomers = customers.length;
+    const vipCustomers = customers.filter(c => c.membershipLevel === 'vip').length;
+    const favoriteCustomers = customers.filter(c => c.favorite).length;
+    const totalRevenue = customers.reduce((sum, c) => sum + c.totalSpent, 0);
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-800 to-gray-900 p-8">

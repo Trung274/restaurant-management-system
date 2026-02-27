@@ -43,7 +43,6 @@ export default function CreateOrderOverlay({ isOpen, onClose }: CreateOrderOverl
     const categories = ['Tất cả', ...Array.from(new Set(menuItems.map(item => item.category)))];
 
     // Fetch data when overlay opens
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         if (isOpen) {
             if (menuItems.length === 0) {
@@ -88,7 +87,7 @@ export default function CreateOrderOverlay({ isOpen, onClose }: CreateOrderOverl
         }
     };
 
-    const updateOrderItem = (id: string, field: keyof OrderItem, value: string | number | OrderItem['priority']) => {
+    const updateOrderItem = (id: string, field: keyof OrderItem, value: any) => {
         setOrderItems(orderItems.map(item =>
             item.id === id ? { ...item, [field]: value } : item
         ));

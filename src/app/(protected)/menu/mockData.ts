@@ -1,4 +1,4 @@
-
+import type { MenuItemData } from './components';
 
 // Hardcoded categories - không cần lưu database
 export const categories = ['Tất cả', 'Món chính', 'Khai vị', 'Đồ uống', 'Tráng miệng', 'Món đặc biệt'];

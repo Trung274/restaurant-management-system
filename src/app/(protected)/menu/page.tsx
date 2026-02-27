@@ -1,10 +1,12 @@
 'use client';
 
 import { useState, useMemo, useEffect } from 'react';
-import Image from 'next/image';
 import { categories, categoryConfig } from './mockData';
 import StatsCard from '@/components/ui/StatsCard';
-import { PlusIcon } from '@heroicons/react/24/outline';
+import {
+  MagnifyingGlassIcon,
+  PlusIcon
+} from '@heroicons/react/24/outline';
 import PageHeader from '@/components/ui/PageHeader';
 import SearchBar from '@/components/ui/SearchBar';
 import { MenuItem, AddMenuItemOverlay, type MenuItemData } from './components';
@@ -23,10 +25,9 @@ export default function MenuPage() {
   const [deleteError, setDeleteError] = useState<string>('');
 
   // Get state and actions from menuStore
-  const { items: menuItems, stats, isLoading, error, fetchMenuItems, fetchStats, removeMenuItem, addMenuItem, editMenuItem } = useMenuStore();
+  const { items: menuItems, stats, isLoading, error, fetchMenuItems, fetchStats, removeMenuItem, addMenuItem, editMenuItem, clearError } = useMenuStore();
 
   // Fetch data on mount and when filters change
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchMenuItems({
       category: selectedCategory === 'Tất cả' ? undefined : selectedCategory,
@@ -35,12 +36,20 @@ export default function MenuPage() {
   }, [selectedCategory, searchQuery]);
 
   // Fetch stats on mount only
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     fetchStats();
   }, []);
 
-
+  // Filter items client-side (or you can pass params to fetchMenuItems)
+  const filteredItems = useMemo(() => {
+    return menuItems.filter(item => {
+      const categoryMatch = selectedCategory === 'Tất cả' || item.category === selectedCategory;
+      const searchMatch = !searchQuery ||
+        item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return categoryMatch && searchMatch;
+    });
+  }, [menuItems, selectedCategory, searchQuery]);
 
   const handleDeleteConfirm = async () => {
     if (!deleteItem) return;
@@ -263,13 +272,13 @@ export default function MenuPage() {
                       } rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg`}>
                       {index + 1}
                     </div>
-                    <Image
-                      src={item.image || '/default-fallback-image.png'}
+                    <img
+                      src={item.image}
                       alt={item.name}
-                      width={80}
-                      height={80}
                       className="w-20 h-20 rounded-lg object-cover"
-                      unoptimized
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = '/default-fallback-image.png';
+                      }}
                     />
                   </div>
                   <div className="flex-1">
